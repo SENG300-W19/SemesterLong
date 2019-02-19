@@ -26,14 +26,6 @@ public class ManagementSystem {
             System.exit(1);
         }
 
-        /**
-         * Create a temporary admin account with username: admin, password: 123
-         * Only necessary on first initialization.
-         * Once you have the account.ser file you can log in without creating a
-         * new account.
-         */
-
-
         Scanner scan = new Scanner(System.in);
 
         /** 0 = Not a user
