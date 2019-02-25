@@ -1,0 +1,20 @@
+How to use:
+
+1. Open terminal
+2. Change to directory with code
+3. Compile all .java files with "javac *.java"
+4. Run "java ManagementSystem"
+5. Log in with Username: admin, Password: 123
+
+
+
+Notes:
+
+For organizing all the user accounts I used a HashMap, where the key is the user’s username and the value is a Users object that contains their username, password, and account type.
+
+I also found a way to create a save state of the HashMap by creating a accounts.ser file on account creation. Every time you run the program the program will try to find the accounts.ser
+file, and if not found it will create a new HashMap with the admin account as well as the save file on your system.
+
+This is a 1st version, so it’s missing a lot of functionalities. Currently only some of the admin stuff is implemented, and the doctor/patient stuff is not included. You can create a doctor
+account (with account type 2), but I haven’t created a doctor class yet. There is a patient class (account type 3), but I only have variables for their name at the moment, which can be
+retrieved by logging in as admin. Logging into either doctor or patient only gives you a prompt to exit. 
