@@ -46,7 +46,7 @@ public class Patient extends User {
      * @param password
      * @param accountType
      */
-    public Patient(String username, String password, int accountType) {
-        super(username, password, accountType);
+    public Patient(String username, String password) {
+        super(username, password, 3);
     }
 }

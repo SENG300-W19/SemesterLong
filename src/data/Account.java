@@ -43,7 +43,7 @@ public class Account {
             User acc = new User(username, password, accountType);
             accDictionary.put(username, acc);
         } else if (accountType == 3) {
-            Patient acc = new Patient(username, password, accountType);
+            Patient acc = new Patient(username, password);
             accDictionary.put(username, acc);
             acc.editInfo();
         }

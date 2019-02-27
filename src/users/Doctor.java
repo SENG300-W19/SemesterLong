@@ -5,29 +5,28 @@ import java.util.Locale;
 import java.util.Scanner;  
 
 public class Doctor extends User {
-	private String specialty; // TODO error checking for valid specialization
-	private Boolean surgeon = false;
-	// sort list alphabetically by last name.
+	
+	private String specialty;
+	private static Boolean surgeon = false;
 	private LinkedList<Patient> patients;
 	
-	public Doctor(String username, String password, int accountType){
-		super(username, password, accountType); 	
+	public Doctor(String username, String password){
+		super(username, password, 2); 	
 	}
+	
 	public void addPatient(Patient toAdd) {
 		if (patients.isEmpty()) patients.add(toAdd);
 		else {
 			Collator sort = Collator.getInstance(Locale.US);
 			for (Patient p : this.patients) {
 				int comparison = sort.compare(toAdd.lastName.toUpperCase(), p.lastName.toUpperCase());
-				if (comparison == 0) {
-					// same last name, compare first names
+				if (comparison == 0) { // same last name, compare first names
 					comparison = sort.compare(toAdd.firstName.toUpperCase(), p.lastName.toUpperCase());
 					if (comparison > 0) {
 						this.patients.add(this.patients.indexOf(p), toAdd);
 						break;
 						}
-				} else if (comparison > 0) {
-					// toAdd has greater alphabetical precedent than the compared index
+				} else if (comparison > 0) { // toAdd has greater alphabetical precedent than the compared index
 					this.patients.add(this.patients.indexOf(p), toAdd);
 					break;
 				}
@@ -95,11 +94,25 @@ public class Doctor extends User {
 	}
 	
 	public void toggleSurgeon() {
-		this.surgeon = !(this.surgeon);
+		Doctor.surgeon = !(Doctor.surgeon);
 		String toDisplay = "Doctor "+this.lastName+" is "; 
-		if (this.surgeon) toDisplay.concat("a Surgeon");
+		if (Doctor.surgeon) toDisplay.concat("a Surgeon");
 		else toDisplay.concat("not a Surgeon");
 		System.out.println(toDisplay);
+	}
+	
+	public boolean isSurgeon() {
+		return Boolean.valueOf(Doctor.surgeon);
+	}
+	
+	public String getSpecialty() {
+		String toReturn;
+		if (this.specialty != null) {
+			toReturn = this.specialty.toString();
+		} else {
+			toReturn = "General Practitioner";
+		}
+		return toReturn; 
 	}
 }
 	
