@@ -8,7 +8,7 @@ public class Patient extends User {
      * Variables for patient's personal info
      */
     // since a doctors extends a patient, this will list all doctors in their department. (for now)
-    private LinkedList<Doctor> doctors = null; 
+    private LinkedList<Doctor> doctors; 
 
     /**
      * Method to edit the patients info on account creation
@@ -24,10 +24,20 @@ public class Patient extends User {
         lastName = scan.next();
 
         System.out.println("Patient name: " + firstName + " " + lastName);
+        
+        scan.close();
     }
 
     public void getInfo() {
         System.out.println("Patient's name: " + firstName + " " + lastName);
+    }
+    
+    public String getFirstName() {
+    	return this.firstName.toString();
+    }
+    
+    public String getLastName() {
+    	return this.lastName.toString();
     }
 
     /**

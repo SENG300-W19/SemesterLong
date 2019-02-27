@@ -1,21 +1,23 @@
-package gui;
+
 import java.util.HashMap;
 import java.util.Scanner;
 
-import data.Account;
-import users.User;
+import data.*;
+import users.*;
+import gui.*;
 
 import java.io.*;
 
 public class ManagementSystem {
 
-    @SuppressWarnings("unchecked")          // Keep getting unchecked cast error at line 14. Temporary solution.
-    public static void main(String[] args) {
+    @SuppressWarnings("unchecked")
+	public static void main(String[] args) {
 
         HashMap<String, User> accDictionary = null;
         try {
             FileInputStream fileIn = new FileInputStream("accounts.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
+            // if you get a class not found error at the line below, try deleting the .ser file and run main again.
             accDictionary = (HashMap<String, User>) in.readObject();
             Account.setDictionary(accDictionary);
             in.close();
