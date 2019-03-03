@@ -1,9 +1,14 @@
 package users;
 import java.io.Serializable;
+import java.util.Scanner;
 
 public class User implements Serializable {
 
-    protected String firstName;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	protected String firstName;
     protected String lastName;
     protected String username;
     protected String password;
@@ -19,6 +24,7 @@ public class User implements Serializable {
      * Empty default constructor
      */
     public User() {
+    	
     }
 
     /**
@@ -56,6 +62,40 @@ public class User implements Serializable {
     public int getAccountType() {
         return this.accountType;
     }
+    
+    public void displayAccountType() {
+    	String toDisplay = null;
+    	switch (this.accountType){
+    	case 1: toDisplay = "This user is an Administrator";
+    	break;
+    	case 2: toDisplay = "This user is a Doctor";
+    	break;
+    	case 3: toDisplay = "This use is a Patient";
+    	break;
+    	}
+    	System.out.println(toDisplay);
+    }
+    
+    public void displayName() {
+    	System.out.println("Last Name: "+this.lastName);
+    	System.out.println("First Name: "+this.firstName);
+    	
+    }
 
+    public void setName() {
+    	Scanner in = new Scanner(System.in);
+    	Boolean valid = false;
+    	while(!valid) {
+    		System.out.print("First Name: ");
+    		String first = in.next();
+    		if (!first.matches("[a-zA-Z]+")) break;
+    		this.firstName = first;
+    		System.out.print("Last Name: ");
+    		String last = in.next();
+    		if (!last.matches("[a-zA-Z]+")) break;
+    		this.lastName = last; 
+    		valid = true; 
+    	}
+    }
 
 }

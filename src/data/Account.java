@@ -2,6 +2,7 @@ package data;
 import java.io.*;
 import java.util.*;
 
+import users.Doctor;
 import users.Patient;
 import users.User;
 
@@ -42,11 +43,17 @@ public class Account {
         if (accountType == 1) {
             User acc = new User(username, password, accountType);
             accDictionary.put(username, acc);
-        } else if (accountType == 3) {
+        } else if (accountType == 2) {
+        	Doctor acc = new Doctor(username,password);
+        	accDictionary.put(username, acc);
+        	acc.setName();
+        	acc.setSpecialty();
+        }else if (accountType == 3) {
             Patient acc = new Patient(username, password);
             accDictionary.put(username, acc);
-            acc.editInfo();
-        }
+            acc.setName();
+        } 
+        
         try {
             FileOutputStream fileOut =
                     new FileOutputStream("accounts.ser");

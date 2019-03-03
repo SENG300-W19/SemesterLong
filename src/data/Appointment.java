@@ -4,6 +4,11 @@ import java.util.LinkedList;
 
 import users.*;
 
+/**
+ * 
+ * @author dylnstwrt
+ *
+ */
 public class Appointment {
 	
 	final String FORMAT_ERROR = "Invalid Formatting";
@@ -14,6 +19,17 @@ public class Appointment {
 	protected Patient patient;
 	protected Doctor doctor; 
 
+	
+	/**
+	 * Constructor for the Appointment class. Assumes a default hour long appointment
+	 * 
+	 * @param day
+	 * @param month
+	 * @param year
+	 * @param hour - formatted in 24hr time
+	 * @param minute
+	 * @throws Exception Throws and exception if the appointment is in the past. 
+	 */
 	public Appointment(int day, Month month, int year, int hour, int minute) throws Exception {
 		try {
 			LocalDateTime now = LocalDateTime.now();
@@ -28,6 +44,13 @@ public class Appointment {
 		
 	}
 	
+	/**
+	 * Check to see that the patient and doctor are assigned to each other before creating
+	 * an appointment
+	 * @param patient
+	 * @param doctor
+	 * @throws Exception
+	 */
 	public void setParticipants(Patient patient, Doctor doctor) throws Exception {
 		LinkedList<Patient> toCompare = this.doctor.returnPatients();
 		if (toCompare.contains(patient)) {

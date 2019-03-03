@@ -5,6 +5,10 @@ import java.util.LinkedList;
 public class Patient extends User {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * Variables for patient's personal info
      */
     // since a doctors extends a patient, this will list all doctors in their department. (for now)
@@ -25,7 +29,6 @@ public class Patient extends User {
 
         System.out.println("Patient name: " + firstName + " " + lastName);
         
-        scan.close();
     }
 
     public void getInfo() {
@@ -49,4 +52,12 @@ public class Patient extends User {
     public Patient(String username, String password) {
         super(username, password, 3);
     }
+
+	public LinkedList<Doctor> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(LinkedList<Doctor> doctors) {
+		this.doctors = doctors;
+	}
 }

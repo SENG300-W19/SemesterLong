@@ -55,11 +55,8 @@ public class Menu {
                 }
                 acc = Account.getDictionary().get(username);
                 if (Account.getDictionary().get(username) != null) {
-                    if (!(acc instanceof Patient)) {
-                        System.out.println("Account is not a patient account.");
-                    } else {
-                        ((Patient) acc).getInfo();
-                    }
+                    acc.displayAccountType();
+                    acc.displayName();
                     System.out.print("\n");
                 }
             }

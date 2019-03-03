@@ -2,13 +2,20 @@ package users;
 import java.text.Collator;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Scanner;  
+import java.util.Scanner;
+
+import data.Schedule;  
 
 public class Doctor extends User {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String specialty;
 	private static Boolean surgeon = false;
 	private LinkedList<Patient> patients;
+	public Schedule schedule;
 	
 	public Doctor(String username, String password){
 		super(username, password, 2); 	
@@ -61,7 +68,6 @@ public class Doctor extends User {
 				System.out.println("Invalid token\n");
 			}
 		}
-		input.close();
 	}
 	
 	public void setSpecialty() {
@@ -70,7 +76,7 @@ public class Doctor extends User {
 		while (!inputValid) {
 			System.out.print("Set specialty: ");
 			String specialty = input.next();
-			if (specialty.matches("\\w")) { 
+			if (specialty.matches("[a-zA-Z]+")) { 
 				inputValid = true; // use REGEX
 				this.specialty = specialty.toString();
 				System.out.println("Specialty set for Doctor "+this.lastName+": "+this.specialty);
@@ -79,7 +85,6 @@ public class Doctor extends User {
 				System.out.println("Error in processing specialty, please try again");
 			}
 		}
-		input.close();
 		
 	}
 	
