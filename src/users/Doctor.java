@@ -29,6 +29,9 @@ public class Doctor extends User {
 				} else if (comparison > 0) { // toAdd has greater alphabetical precedent than the compared index
 					this.patients.add(this.patients.indexOf(p), toAdd);
 					break;
+				} else if (patients.indexOf(p) == patients.size()-1) {
+					// if toAdd is the last element to be appended
+					this.patients.add(toAdd);
 				}
 					
 			}
@@ -43,7 +46,7 @@ public class Doctor extends User {
 	
 	public void removePatient() {
 		// list all patients
-		// remove patient at certian index (1 . . . . N), use 0 to cancel
+		// remove patient at certain index (1 . . . . N), use 0 to cancel
 		Scanner input = new Scanner(System.in);
 		this.listPatients();
 		System.out.println("Select the number of the user you would like to remove, or press 0 to exit: ");
@@ -52,21 +55,8 @@ public class Doctor extends User {
 			String usrInput = input.next();
 			if (usrInput.matches("\\d")) {
 				
-				switch (usrInput) {
-			
-				case "0": 
-					System.out.println("Exiting, no changes made...\n");
-					inputValid = true;
-					break;
-				default:
-					if (Integer.parseInt(usrInput) <= patients.size() && Integer.parseInt(usrInput) > 0) {
-						patients.remove(Integer.parseInt(usrInput) - 1);
-						inputValid = true;
-					} else {
-						System.out.println("Input out of range");
-					}
 				
-				}
+				
 			} else {
 				System.out.println("Invalid token\n");
 			}
@@ -112,6 +102,11 @@ public class Doctor extends User {
 		} else {
 			toReturn = "General Practitioner";
 		}
+		return toReturn; 
+	}
+	
+	public LinkedList<Patient> returnPatients() {
+		LinkedList<Patient> toReturn = new LinkedList<Patient>(this.patients);
 		return toReturn; 
 	}
 }

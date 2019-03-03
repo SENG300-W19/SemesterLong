@@ -17,7 +17,7 @@ public class ManagementSystem {
         try {
             FileInputStream fileIn = new FileInputStream("accounts.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            // if you get a class not found error at the line below, try deleting the .ser file and run main again.
+            // if you get a class not found error at the line below, try deleting/recreating the .ser file and run main again.
             accDictionary = (HashMap<String, User>) in.readObject();
             Account.setDictionary(accDictionary);
             in.close();
