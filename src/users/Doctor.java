@@ -14,7 +14,7 @@ public class Doctor extends User {
 	private static final long serialVersionUID = 1L;
 	private String specialty;
 	private static Boolean surgeon = false;
-	private LinkedList<Patient> patients;
+	private LinkedList<User> patients;
 	public Schedule schedule;
 	
 	public Doctor(String username, String password){
@@ -25,7 +25,7 @@ public class Doctor extends User {
 		if (patients.isEmpty()) patients.add(toAdd);
 		else {
 			Collator sort = Collator.getInstance(Locale.US);
-			for (Patient p : this.patients) {
+			for (User p : this.patients) {
 				int comparison = sort.compare(toAdd.lastName.toUpperCase(), p.lastName.toUpperCase());
 				if (comparison == 0) { // same last name, compare first names
 					comparison = sort.compare(toAdd.firstName.toUpperCase(), p.lastName.toUpperCase());
@@ -46,7 +46,7 @@ public class Doctor extends User {
 	}
 	
 	public void listPatients() {
-		for (Patient p : this.patients) {
+		for (User p : this.patients) {
 			System.out.println((this.patients.indexOf(p)+1)+" "+p.lastName+", "+p.firstName);
 		}
 	}
@@ -110,8 +110,8 @@ public class Doctor extends User {
 		return toReturn; 
 	}
 	
-	public LinkedList<Patient> returnPatients() {
-		LinkedList<Patient> toReturn = new LinkedList<Patient>(this.patients);
+	public LinkedList<User> returnPatients() {
+		LinkedList<User> toReturn = new LinkedList<User>(this.patients);
 		return toReturn; 
 	}
 }

@@ -1,6 +1,9 @@
 package users;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.Scanner;
+
+import data.Schedule;
 
 public class User implements Serializable {
 
@@ -9,9 +12,19 @@ public class User implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected String firstName;
-    protected String lastName;
+    public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	protected String lastName;
     protected String username;
     protected String password;
+    public LinkedList<User> list;
+    public Schedule schedule;
 
     /** 0 = Not a user
      * 1 = Admin

@@ -16,16 +16,18 @@ public class Menu {
     private static void adminMenu() {
         Scanner scan = new Scanner(System.in);
         int input = 1;
-        while (input != 5) {
+        while (input != 0) {
             System.out.println("Administrative Menu:\n" +
                     "1. Create a new account\n" +
-                    "2. Edit account (Disabled)\n" +
-                    "3. Edit appointment (Disabled)\n" +
+                    "2. Edit account\n" +
+                    "3. Add appointment\n" +
                     "4. Get user info\n" +
-                    "5. Exit\n");
+                    "5. Assign patient to Doctor\n"+
+                    "6. List Appointments for User\n"+
+                    "0. Exit\n");
             System.out.print("What would you like to do: ");
             input = scan.nextInt();
-            while (input < 1 || input > 5) {
+            while (input < 0 || input > 6) {
                 System.out.print("\n");
                 System.out.println("Please input a valid menu item: ");
             }
@@ -40,25 +42,85 @@ public class Menu {
                 System.out.print("Enter account type: ");
                 int accountType = scan.nextInt();
                 Account.createAccount(username, password, accountType);
-            } else if (input == 4) {
+                    
+            } else if (input == 2) {
+            	System.out.println("Editing Info\n ...press enter 0 to exit");
+            	System.out.print("Enter Username: ");
+            	String userName = scan.next();
+            	User acc = Account.getDictionary().get(userName);
+            	while (acc == null) {
+            		if (userName.equals("0")) break;
+                    System.out.print("Please enter a valid username or press 0:");
+                    userName = scan.next();
+            	}
+            	if (!(userName.equals("0"))) acc.setName();
+            // figure out how to change specialty
+            
+        	} else if (input == 3) {
+        		System.out.println("Adding appointment for user, press 0 to exit");
+        		System.out.print("Enter username: ");
+        		String userName = scan.next();
+        		User acc = Account.getDictionary().get(userName);
+        		while (acc == null) {
+            		if (userName == "0") break;
+            		userName = scan.next();
+        		} if (userName == "0"); 	 
+            
+            
+            
+    		} else if (input == 4) {
                 System.out.println("\nGetting user info.\n");
                 System.out.print("Enter username: ");
                 String username = scan.next();
 
-                User acc = Account.getDictionary().get(username);
-                while (acc == null) {
+                User acc1 = Account.getDictionary().get(username);
+                while (acc1 == null) {
                     System.out.print("Please enter a valid username or enter 5 to return to main menu: ");
                     username = scan.next();
                     if (username.equals("5")) {
                         break;
                     }
                 }
-                acc = Account.getDictionary().get(username);
+                acc1 = Account.getDictionary().get(username);
                 if (Account.getDictionary().get(username) != null) {
-                    acc.displayAccountType();
-                    acc.displayName();
+                    acc1.displayAccountType();
+                    acc1.displayName();
                     System.out.print("\n");
                 }
+            } else if (input == 5) {
+            	System.out.println("Assigning Patient to Doctor, press 0 (for both) to Exit");
+            	System.out.print("Enter Doctor's Username");
+            	String patientUsername = "";
+            	String doctorUsername = scan.next();
+            	User doctor = Account.getDictionary().get(doctorUsername);
+            	while (doctor.getAccountType() != 2) {
+            		if (doctorUsername == "0") {
+            			patientUsername = "0";
+            			break;
+            		} else {
+            			doctorUsername = scan.next();
+            			doctor = Account.getDictionary().get(doctorUsername);
+            		}
+            	}
+            	System.out.print("Enter Patient's Username: ");
+            	patientUsername = scan.next();
+            	User patient = Account.getDictionary().get(patientUsername);
+            	while(patient.getAccountType() != 3) {
+            		patientUsername = scan.next();
+            		if (patientUsername == "0") {
+            			doctorUsername = "0";
+            			break;
+            		} else {
+            			patientUsername = scan.next();
+            			patient = Account.getDictionary().get(patientUsername);
+            		}
+            	} if (!(doctorUsername == "0" && patientUsername == "0")) { 
+	            	doctor.list.add(patient);
+	            	System.out.println("Assigned patient: ");
+	            	patient.displayName();
+	            	System.out.println("To Doctor: ");
+	            	doctor.displayName();
+            	}
             }
         }
         System.exit(0);
@@ -73,12 +135,9 @@ public class Menu {
         int input = 1;
         while (input != 4) {
             System.out.print("Doctor Menu:\n" +
-                    "Work in progress. Enter 4 to exit: ");
+                    "0. Exit");
             input = scan.nextInt();
-            while (input != 4) {
-                System.out.print("Please input 4 to exit: ");
-                input = scan.nextInt();
-            }
+            if (input == 0) break;
         }
         System.exit(0);
     }
@@ -92,7 +151,7 @@ public class Menu {
         int input = 1;
         while (input != 4) {
             System.out.print("Patient Menu:\n" +
-                    "Work in progress. Enter 4 to exit: ");
+                    "4. Exit");
             input = scan.nextInt();
             while (input != 4) {
                 System.out.print("Please input 4 to exit: ");
