@@ -12,7 +12,7 @@ public class Patient extends User {
      * Variables for patient's personal info
      */
     // since a doctors extends a patient, this will list all doctors in their department. (for now)
-    private LinkedList<Doctor> doctors; 
+    public LinkedList<Doctor> doctors; 
 
     /**
      * Method to edit the patients info on account creation

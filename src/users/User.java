@@ -11,7 +11,7 @@ public class User implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	protected String firstName;
+	public String firstName;
     public String getFirstName() {
 		return firstName;
 	}
@@ -20,11 +20,11 @@ public class User implements Serializable {
 		this.firstName = firstName;
 	}
 
-	protected String lastName;
-    protected String username;
-    protected String password;
-    public LinkedList<User> list;
-    public Schedule schedule;
+	public String lastName;
+    public String username;
+    public String password;
+    public LinkedList<User> list = new LinkedList<User>();
+    public Schedule schedule = new Schedule();
 
     /** 0 = Not a user
      * 1 = Admin
@@ -101,11 +101,11 @@ public class User implements Serializable {
     	while(!valid) {
     		System.out.print("First Name: ");
     		String first = in.next();
-    		if (!first.matches("[a-zA-Z]+")) break;
+    		if (first.matches("[a-zA-Z]+") == false) break;
     		this.firstName = first;
     		System.out.print("Last Name: ");
     		String last = in.next();
-    		if (!last.matches("[a-zA-Z]+")) break;
+    		if (last.matches("[a-zA-Z]+") == false) break;
     		this.lastName = last; 
     		valid = true; 
     	}

@@ -8,7 +8,7 @@ import gui.*;
 
 import java.io.*;
 
-public class ManagementSystem {
+public class ManagementSystem implements Serializable{
 
     @SuppressWarnings("unchecked")
 	public static void main(String[] args) {
@@ -18,7 +18,7 @@ public class ManagementSystem {
             FileInputStream fileIn = new FileInputStream("accounts.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             // if you get a class not found error at the line below, try deleting/recreating the .ser file and run main again.
-            accDictionary = (HashMap<String, User>) in.readObject();
+            accDictionary = (HashMap<String, User>)in.readObject();
             Account.setDictionary(accDictionary);
             in.close();
             fileIn.close();

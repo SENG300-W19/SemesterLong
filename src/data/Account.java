@@ -6,7 +6,7 @@ import users.Doctor;
 import users.Patient;
 import users.User;
 
-public class Account {
+public class Account{
 
     // HashMap of all the accounts in the database. Maps a User object to a username.
     private static HashMap<String, User> accDictionary;
@@ -40,19 +40,21 @@ public class Account {
      * @param accountType 1 - admin, 2 - doctor, 3 patient.
      */
     public static void createAccount(String username, String password, int accountType) {
-        if (accountType == 1) {
+       // if (accountType == 1) {
             User acc = new User(username, password, accountType);
-            accDictionary.put(username, acc);
-        } else if (accountType == 2) {
-        	Doctor acc = new Doctor(username,password);
-        	accDictionary.put(username, acc);
-        	acc.setName();
-        	acc.setSpecialty();
-        }else if (accountType == 3) {
-            Patient acc = new Patient(username, password);
-            accDictionary.put(username, acc);
+            System.out.println("Enter the user's real name: ");
             acc.setName();
-        } 
+            accDictionary.put(username, acc);
+      //  } else if (accountType == 2) {
+        //	Doctor acc = new Doctor(username,password);
+        //	accDictionary.put(username, acc);
+        //	acc.setName();
+        //	acc.setSpecialty();
+    //    }else if (accountType == 3) {
+      //      Patient acc = new Patient(username, password);
+       //     accDictionary.put(username, acc);
+       //     acc.setName();
+     //   } 
         
         try {
             FileOutputStream fileOut =
@@ -64,6 +66,7 @@ public class Account {
             System.out.println("\nAccount " + username + " is created and saved.\n");
         } catch (IOException i) {
             System.out.println("Could not successfully create/save accounts.ser.");
+            i.printStackTrace();
         }
 
     }

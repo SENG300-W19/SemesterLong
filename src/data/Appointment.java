@@ -1,4 +1,5 @@
 package data;
+import java.io.Serializable;
 import java.time.*;
 import java.util.LinkedList;
 
@@ -9,15 +10,15 @@ import users.*;
  * @author dylnstwrt
  *
  */
-public class Appointment {
+public class Appointment implements Serializable{
 	
 	final String FORMAT_ERROR = "Invalid Formatting";
 	final String OOR = "Out of Range";
 	
-	protected LocalDateTime start;
-	protected LocalDateTime finish;
-	protected User patient;
-	protected User doctor; 
+	public LocalDateTime start;
+	public LocalDateTime finish;
+	public User patient;
+	public User doctor; 
 
 	
 	/**

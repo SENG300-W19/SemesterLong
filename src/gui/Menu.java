@@ -57,15 +57,19 @@ public class Menu {
             // figure out how to change specialty
             
         	} else if (input == 3) {
-        		System.out.println("Adding appointment for user, press 0 to exit");
+        		System.out.println("Adding appointment for user\n ...press 0 to exit");
         		System.out.print("Enter username: ");
         		String userName = scan.next();
         		User acc = Account.getDictionary().get(userName);
         		while (acc == null) {
-            		if (userName == "0") break;
+            		if (userName.equals("0")) break;
+            		System.out.print("Enter Username: ");
             		userName = scan.next();
-        		} if (userName == "0"); 	 
-            
+            		acc = Account.getDictionary().get(userName);
+        		 } 	 
+        		if((userName.equals("0")) == false) {
+        			acc.schedule.addAppointment();
+        		}
             
             
     		} else if (input == 4) {
@@ -89,7 +93,7 @@ public class Menu {
                 }
             } else if (input == 5) {
             	System.out.println("Assigning Patient to Doctor, press 0 (for both) to Exit");
-            	System.out.print("Enter Doctor's Username");
+            	System.out.print("Enter Doctor's Username: ");
             	String patientUsername = "";
             	String doctorUsername = scan.next();
             	User doctor = Account.getDictionary().get(doctorUsername);
@@ -114,12 +118,25 @@ public class Menu {
             			patientUsername = scan.next();
             			patient = Account.getDictionary().get(patientUsername);
             		}
-            	} if (!(doctorUsername == "0" && patientUsername == "0")) { 
+            	} if (!(doctorUsername.equals("0") || patientUsername.equals("0"))) { 
 	            	doctor.list.add(patient);
-	            	System.out.println("Assigned patient: ");
+	            	System.out.print("Assigned patient: ");
 	            	patient.displayName();
-	            	System.out.println("To Doctor: ");
+	            	System.out.print("To Doctor: ");
 	            	doctor.displayName();
+            	}
+            } else if (input == 6) {
+            	System.out.println("Listing Appointments, enter in the name of the user or press 0");
+            	String userName = scan.next();
+            	while(userName != "0") {
+            		User account = Account.getDictionary().get(userName);
+            		if (account != null) {
+            			account.schedule.listAppointments();
+            			break;
+            		} else {
+            			System.out.println("Please enter a username, or press 0");
+            			userName = scan.next();
+            		}
             	}
             }
         }

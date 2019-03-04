@@ -2,17 +2,16 @@ package data;
 import users.*; 
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.io.Serializable;
 import java.time.LocalDateTime; 
-public class Schedule {
-	public LinkedList<Appointment> list;
-	public User owner;
+public class Schedule implements Serializable {
+	public LinkedList<Appointment> list = new LinkedList<Appointment>(); 
 	
 	/**
 	 * Default constructor for doctors schedule
 	 */
 	
-	public Schedule(User owner) {
-		this.owner = owner;
+	public Schedule() {
 	}
 	
 	public void addAppointment() {
@@ -38,9 +37,9 @@ public class Schedule {
 						timeValid = false;
 						break;
 					}
-				}
+				} if (timeValid) list.add(toAdd);
 			}
-			System.out.println("Appointment Added");
+			System.out.println("Appointment Added:\n("+list.getLast().start.toString()+")");
 		} catch (Exception e) {
 			
 		}
@@ -51,13 +50,10 @@ public class Schedule {
 	}
 	
 	public void listAppointments() {
-		System.out.println("List of appoinments of "+this.owner.getFirstName());
+		System.out.println("List of appoinments: ");
 		for (Appointment app : list) {
-			String toPrint = String.valueOf(list.indexOf(app)+1);
-			toPrint.concat("."
-					+ 	"\nStart: "+app.start.toString()
-					+	"\nFinish: "+app.finish.toString()
-					);
+			System.out.print((list.indexOf(app)+1)+". ");
+			System.out.print(app.start.toString()+"\n");
 		}
 	}
 }
