@@ -42,9 +42,10 @@ public class Account{
     public static void createAccount(String username, String password, int accountType) {
        // if (accountType == 1) {
             User acc = new User(username, password, accountType);
-            System.out.println("Enter the user's real name: ");
+            System.out.println("Enter the user's first and last name");
             acc.setName();
             accDictionary.put(username, acc);
+            /**
       //  } else if (accountType == 2) {
         //	Doctor acc = new Doctor(username,password);
         //	accDictionary.put(username, acc);
@@ -54,7 +55,7 @@ public class Account{
       //      Patient acc = new Patient(username, password);
        //     accDictionary.put(username, acc);
        //     acc.setName();
-     //   } 
+     //   } **/
         
         try {
             FileOutputStream fileOut =

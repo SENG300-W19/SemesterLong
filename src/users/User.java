@@ -75,7 +75,9 @@ public class User implements Serializable {
     public int getAccountType() {
         return this.accountType;
     }
-    
+     /**
+      * prints message to terminal depending on the value of the accountType
+      */
     public void displayAccountType() {
     	String toDisplay = null;
     	switch (this.accountType){
@@ -89,12 +91,18 @@ public class User implements Serializable {
     	System.out.println(toDisplay);
     }
     
+    /**
+     * prints name to terminal
+     */
     public void displayName() {
     	System.out.println("Last Name: "+this.lastName);
     	System.out.println("First Name: "+this.firstName);
     	
     }
 
+    /**
+     * takes input from terminal to set the name of the user object
+     */
     public void setName() {
     	Scanner in = new Scanner(System.in);
     	Boolean valid = false;

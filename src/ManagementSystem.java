@@ -8,7 +8,7 @@ import gui.*;
 
 import java.io.*;
 
-public class ManagementSystem implements Serializable{
+public class ManagementSystem implements Serializable {
 
     @SuppressWarnings("unchecked")
 	public static void main(String[] args) {

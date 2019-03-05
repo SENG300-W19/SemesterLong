@@ -6,20 +6,30 @@ import java.util.Scanner;
 
 import data.Schedule;  
 
+/**
+ * not used, refactoring is required. 
+ * @author dylnstwrt
+ * 
+ * TODO fix variable visibility and implement missing functionality
+ *  
+ */
 public class Doctor extends User {
 	
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
-	private String specialty;
+	private String specialty = "";
 	private static Boolean surgeon = false;
-	private LinkedList<User> patients;
-	public Schedule schedule;
+	private LinkedList<User> patients = new LinkedList<User>();
+	public Schedule schedule = new Schedule();
 	
 	public Doctor(String username, String password){
 		super(username, password, 2); 	
 	}
+	 /**
+	  * used to add user/patient object into linked list according to last name major
+	  * alphabetical order.
+	  * @param toAdd - Patient object to be added to the linked-list
+	  */
 	
 	public void addPatient(Patient toAdd) {
 		if (patients.isEmpty()) patients.add(toAdd);
@@ -45,12 +55,22 @@ public class Doctor extends User {
 		}
 	}
 	
+	/**
+	 * displays all members of the patient list to terminal
+	 */
 	public void listPatients() {
 		for (User p : this.patients) {
 			System.out.println((this.patients.indexOf(p)+1)+" "+p.lastName+", "+p.firstName);
 		}
 	}
 	
+	/**
+	 * lists all patients, with an index next to their name, takes that index as input from terminal
+	 * and removes said patient from the list.
+	 * 
+	 * TODO confirmation
+	 * TODO refactor to do something
+	 */
 	public void removePatient() {
 		// list all patients
 		// remove patient at certain index (1 . . . . N), use 0 to cancel
@@ -70,6 +90,10 @@ public class Doctor extends User {
 		}
 	}
 	
+	/**
+	 * takes input from terminal, checks if is a single word with alphabetical characters, sets as doctors specialty
+	 * and then displays confirmation of said specialty
+	 */
 	public void setSpecialty() {
 		Boolean inputValid = false;
 		Scanner input = new Scanner(System.in);
@@ -88,6 +112,9 @@ public class Doctor extends User {
 		
 	}
 	
+	/**
+	 * toggles boolean of weather or not the doctor is a surgeon, which is a doctor is not on creation of the object.
+	 */
 	public void toggleSurgeon() {
 		Doctor.surgeon = !(Doctor.surgeon);
 		String toDisplay = "Doctor "+this.lastName+" is "; 
@@ -95,11 +122,18 @@ public class Doctor extends User {
 		else toDisplay.concat("not a Surgeon");
 		System.out.println(toDisplay);
 	}
-	
+	 /**
+	  * 
+	  * @return weather or not the doctor is a surgeon.
+	  */
 	public boolean isSurgeon() {
 		return Boolean.valueOf(Doctor.surgeon);
 	}
 	
+	/**
+	 * 
+	 * @return string of specialty, if not set, will return that doctor is a GP
+	 */
 	public String getSpecialty() {
 		String toReturn;
 		if (this.specialty != null) {
@@ -110,6 +144,10 @@ public class Doctor extends User {
 		return toReturn; 
 	}
 	
+	/**
+	 * 
+	 * @return linked list object copy of the list of patients.
+	 */
 	public LinkedList<User> returnPatients() {
 		LinkedList<User> toReturn = new LinkedList<User>(this.patients);
 		return toReturn; 

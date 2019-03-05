@@ -1,5 +1,9 @@
 package users;
-
+/**
+ * 
+ * @author dylnstwrt
+ * not used, refactor is required
+ */
 public class Admin extends User{
 	/**
 	 * 

@@ -1,7 +1,11 @@
 package users;
 import java.util.Scanner;
 import java.util.LinkedList;
-
+/**
+ * 
+ * not used, appropriate methods moved into user class, refactoring required
+ *
+ */
 public class Patient extends User {
 
     /**

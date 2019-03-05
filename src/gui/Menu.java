@@ -127,14 +127,15 @@ public class Menu {
             	}
             } else if (input == 6) {
             	System.out.println("Listing Appointments, enter in the name of the user or press 0");
+            	System.out.print("Enter Username: ");
             	String userName = scan.next();
-            	while(userName != "0") {
+            	while(!(userName.contentEquals("0"))) {
             		User account = Account.getDictionary().get(userName);
             		if (account != null) {
             			account.schedule.listAppointments();
             			break;
             		} else {
-            			System.out.println("Please enter a username, or press 0");
+            			System.out.println("Please enter a valid username, or press 0 to exit");
             			userName = scan.next();
             		}
             	}

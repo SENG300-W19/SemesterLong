@@ -3,7 +3,13 @@ import users.*;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.io.Serializable;
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
+
+/**
+ * 
+ * @author dylnstwrt
+ *
+ */
 public class Schedule implements Serializable {
 	public LinkedList<Appointment> list = new LinkedList<Appointment>(); 
 	

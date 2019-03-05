@@ -6,9 +6,12 @@ import java.util.LinkedList;
 import users.*;
 
 /**
+ * class for an appointment object, which contains a start, and end time (by default is 1 hour)
+ * patient and doctor aren't implemented as we want to do accountType dependent validation, and thus
+ * would like to implement separate classes properly
  * 
  * @author dylnstwrt
- *
+ * 
  */
 public class Appointment implements Serializable{
 	
@@ -22,7 +25,8 @@ public class Appointment implements Serializable{
 
 	
 	/**
-	 * Constructor for the Appointment class. Assumes a default hour long appointment
+	 * Constructor for the Appointment class. Assumes a default hour long appointment 
+	 * and isn't being scheduled more than two months in advanced.
 	 * 
 	 * @param day
 	 * @param month
