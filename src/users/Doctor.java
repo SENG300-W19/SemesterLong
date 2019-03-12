@@ -17,7 +17,7 @@ public class Doctor extends User {
 	
 	
 	private static final long serialVersionUID = 1L;
-	private String specialty = "";
+	private String specialty = "General Practicioner";
 	private static Boolean surgeon = false;
 	private LinkedList<User> patients = new LinkedList<User>();
 	public Schedule schedule = new Schedule();
@@ -136,11 +136,7 @@ public class Doctor extends User {
 	 */
 	public String getSpecialty() {
 		String toReturn;
-		if (this.specialty != null) {
-			toReturn = this.specialty.toString();
-		} else {
-			toReturn = "General Practitioner";
-		}
+		toReturn = this.specialty.toString();
 		return toReturn; 
 	}
 	

@@ -2,6 +2,7 @@ package data;
 import java.io.*;
 import java.util.*;
 
+import users.Admin;
 import users.Doctor;
 import users.Patient;
 import users.User;
@@ -34,29 +35,31 @@ public class Account{
     }
 
     /**
+     * TODO - Fix to create separate Doctor, Patient, and Admin Accounts Based Upon the int input
      * Method to create a new account
      * @param username
      * @param password
      * @param accountType 1 - admin, 2 - doctor, 3 patient.
      */
     public static void createAccount(String username, String password, int accountType) {
-       // if (accountType == 1) {
-            User acc = new User(username, password, accountType);
-            System.out.println("Enter the user's first and last name");
-            acc.setName();
+    	switch(accountType) {
+    	case 1: 
+    		Admin admin = new Admin(username, password);
+    		admin.setName();
+            accDictionary.put(username, admin);
+    		break;
+    	case 2:
+    		Doctor doctor = new Doctor(username,password);
+    		doctor.setName();
+            accDictionary.put(username, doctor);
+    		break;
+    	case 3:
+    		Patient acc = new Patient(username,password);
+    		acc.setName();
             accDictionary.put(username, acc);
-            /**
-      //  } else if (accountType == 2) {
-        //	Doctor acc = new Doctor(username,password);
-        //	accDictionary.put(username, acc);
-        //	acc.setName();
-        //	acc.setSpecialty();
-    //    }else if (accountType == 3) {
-      //      Patient acc = new Patient(username, password);
-       //     accDictionary.put(username, acc);
-       //     acc.setName();
-     //   } **/
-        
+    		break;
+    	}
+            
         try {
             FileOutputStream fileOut =
                     new FileOutputStream("accounts.ser");
