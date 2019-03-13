@@ -19,6 +19,15 @@ public class Schedule implements Serializable {
 	
 	public Schedule() {
 	}
+
+    /**
+     * copy constuctor for ScheduleClass
+     * TODO Update with new data types if needed.
+     * @param toCopy
+     */
+	public Schedule(Schedule toCopy) {
+	    this.list = toCopy.list;
+    }
 	
 	public void addAppointment() {
 		try {

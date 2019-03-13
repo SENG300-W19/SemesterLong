@@ -11,7 +11,7 @@ public class User implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public String firstName;
+	private String firstName;
     public String getFirstName() {
 		return firstName;
 	}
@@ -20,11 +20,31 @@ public class User implements Serializable {
 		this.firstName = firstName;
 	}
 
-	public String lastName;
-    public String username;
-    public String password;
-    public LinkedList<User> list = new LinkedList<User>();
-    public Schedule schedule = new Schedule();
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
+    }
+
+    private String lastName;
+    private String username;
+    private String password;
+    //privateLinkedList<User> list = new LinkedList<User>();
+    private Schedule schedule = new Schedule();
+
+    /**
+     * uses copy constructor in schedule class.
+     * @return copy of schedule
+     */
+    public Schedule getSchedule() {
+        return new Schedule(this.schedule);
+    }
 
     /** 0 = Not a user
      * 1 = Admin
@@ -42,7 +62,7 @@ public class User implements Serializable {
 
     /**
      * Constructor for creating a new user
-     * @param usernames
+     * @param username
      * @param password
      * @param accountType
      */

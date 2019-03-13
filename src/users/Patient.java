@@ -26,32 +26,25 @@ public class Patient extends User {
         Scanner scan = new Scanner(System.in);
 
         System.out.print("Input first name: ");
-        firstName = scan.next();
+        String first = scan.next();
+        this.setFirstName(first);
 
         System.out.print("Input last name: ");
-        lastName = scan.next();
+        String last = scan.next();
+        this.setLastName(last);
 
-        System.out.println("Patient name: " + firstName + " " + lastName);
+        System.out.println("Patient name: " + this.getFirstName() + " " + this.getLastName());
         
     }
 
     public void getInfo() {
-        System.out.println("Patient's name: " + firstName + " " + lastName);
-    }
-    
-    public String getFirstName() {
-    	return this.firstName.toString();
-    }
-    
-    public String getLastName() {
-    	return this.lastName.toString();
+        System.out.println("Patient's name: " + this.getFirstName() + " " + this.getLastName());
     }
 
     /**
      * Constructor to create a patient account which calls parent class (User) constructor
      * @param username
      * @param password
-     * @param accountType
      */
     public Patient(String username, String password) {
         super(username, password, 3);

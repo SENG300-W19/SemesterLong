@@ -20,7 +20,9 @@ public class Doctor extends User {
 	private String specialty = "General Practicioner";
 	private static Boolean surgeon = false;
 	private LinkedList<User> patients = new LinkedList<User>();
-	public Schedule schedule = new Schedule();
+	private Schedule schedule = new Schedule();
+
+
 	
 	public Doctor(String username, String password){
 		super(username, password, 2); 	
@@ -36,9 +38,9 @@ public class Doctor extends User {
 		else {
 			Collator sort = Collator.getInstance(Locale.US);
 			for (User p : this.patients) {
-				int comparison = sort.compare(toAdd.lastName.toUpperCase(), p.lastName.toUpperCase());
+				int comparison = sort.compare(toAdd.getLastName().toUpperCase(), p.getLastName().toUpperCase());
 				if (comparison == 0) { // same last name, compare first names
-					comparison = sort.compare(toAdd.firstName.toUpperCase(), p.lastName.toUpperCase());
+					comparison = sort.compare(toAdd.getFirstName().toUpperCase(), p.getFirstName().toUpperCase());
 					if (comparison > 0) {
 						this.patients.add(this.patients.indexOf(p), toAdd);
 						break;
@@ -60,7 +62,7 @@ public class Doctor extends User {
 	 */
 	public void listPatients() {
 		for (User p : this.patients) {
-			System.out.println((this.patients.indexOf(p)+1)+" "+p.lastName+", "+p.firstName);
+			System.out.println((this.patients.indexOf(p)+1)+" "+p.getLastName()+", "+p.getFirstName());
 		}
 	}
 	
@@ -103,7 +105,7 @@ public class Doctor extends User {
 			if (specialty.matches("[a-zA-Z]+")) { 
 				inputValid = true; // use REGEX
 				this.specialty = specialty.toString();
-				System.out.println("Specialty set for Doctor "+this.lastName+": "+this.specialty);
+				System.out.println("Specialty set for Doctor "+this.getLastName()+": "+this.specialty);
 				
 			} else {
 				System.out.println("Error in processing specialty, please try again");
@@ -117,7 +119,7 @@ public class Doctor extends User {
 	 */
 	public void toggleSurgeon() {
 		Doctor.surgeon = !(Doctor.surgeon);
-		String toDisplay = "Doctor "+this.lastName+" is "; 
+		String toDisplay = "Doctor "+this.getLastName()+" is ";
 		if (Doctor.surgeon) toDisplay.concat("a Surgeon");
 		else toDisplay.concat("not a Surgeon");
 		System.out.println(toDisplay);
