@@ -4,7 +4,7 @@ import java.util.*;
 
 import data.Account;
 import users.Patient;
-import users.User;
+import users.*;
 
 public class Menu {
 
@@ -68,7 +68,7 @@ public class Menu {
             		acc = Account.getDictionary().get(userName);
         		 } 	 
         		if((userName.equals("0")) == false) {
-        			acc.schedule.addAppointment();
+        			acc.getSchedule().addAppointment();
         		}
             
             
@@ -111,7 +111,7 @@ public class Menu {
             	User patient = Account.getDictionary().get(patientUsername);
             	while(patient.getAccountType() != 3) {
             		patientUsername = scan.next();
-            		if (patientUsername == "0") {
+            		if (patientUsername.equals("0")) {
             			doctorUsername = "0";
             			break;
             		} else {
@@ -119,7 +119,7 @@ public class Menu {
             			patient = Account.getDictionary().get(patientUsername);
             		}
             	} if (!(doctorUsername.equals("0") || patientUsername.equals("0"))) { 
-	            	doctor.list.add(patient);
+	            //	doctor.;
 	            	System.out.print("Assigned patient: ");
 	            	patient.displayName();
 	            	System.out.print("To Doctor: ");
@@ -132,7 +132,7 @@ public class Menu {
             	while(!(userName.contentEquals("0"))) {
             		User account = Account.getDictionary().get(userName);
             		if (account != null) {
-            			account.schedule.listAppointments();
+            			account.getSchedule().listAppointments();
             			break;
             		} else {
             			System.out.println("Please enter a valid username, or press 0 to exit");

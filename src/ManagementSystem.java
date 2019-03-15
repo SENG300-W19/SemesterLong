@@ -12,7 +12,6 @@ public class ManagementSystem implements Serializable {
 
     @SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-
         HashMap<String, User> accDictionary = null;
         try {
             FileInputStream fileIn = new FileInputStream("accounts.ser");

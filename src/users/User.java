@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 import data.Schedule;
+import gui.Info;
 
 public class User implements Serializable {
 
@@ -124,8 +125,12 @@ public class User implements Serializable {
      * takes input from terminal to set the name of the user object
      */
     public void setName() {
+        Info form = new Info();
+        form.init();
+
+        /**
     	Scanner in = new Scanner(System.in);
-    	Boolean valid = false;
+    	boolean valid = false;
     	while(!valid) {
     		System.out.print("First Name: ");
     		String first = in.next();
@@ -137,6 +142,7 @@ public class User implements Serializable {
     		this.lastName = last; 
     		valid = true; 
     	}
+         */
     }
 
 }

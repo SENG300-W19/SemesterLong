@@ -11,6 +11,10 @@ public class Account{
 
     // HashMap of all the accounts in the database. Maps a User object to a username.
     private static HashMap<String, User> accDictionary;
+    private static HashMap<String, Admin> adminDictionary;
+    private static HashMap<String, Doctor> doctorDictionary;
+    private static HashMap<String, Patient> patientDictionary;
+
 
     /**
      * Setter method to set the HashMap to a previous save state on load up
@@ -19,6 +23,9 @@ public class Account{
     public static void setDictionary(HashMap<String, User> dictionary) {
         accDictionary = dictionary;
     }
+    public static void setAdminDictionary(HashMap<String, Admin> dictionary) {adminDictionary = dictionary;}
+    public static void setDoctorDictionary(HashMap<String, Doctor> dictionary) {doctorDictionary = dictionary;}
+    public static void setPatientDictionary(HashMap<String, Patient> dictionary) {patientDictionary = dictionary;}
 
     /**
      * Getter for the HashMap object
