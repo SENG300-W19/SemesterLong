@@ -1,23 +1,29 @@
+
 import java.util.HashMap;
 import java.util.Scanner;
+
+import data.*;
+import gui.Menu;
+import users.*;
+
 import java.io.*;
 
-public class ManagementSystem {
+public class ManagementSystem implements Serializable {
 
-    @SuppressWarnings("unchecked")          // Keep getting unchecked cast error at line 14. Temporary solution.
-    public static void main(String[] args) {
-
-        HashMap<String, Users> accDictionary = null;
+    @SuppressWarnings("unchecked")
+	public static void main(String[] args) {
+        HashMap<String, User> accDictionary = null;
         try {
             FileInputStream fileIn = new FileInputStream("accounts.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            accDictionary = (HashMap<String, Users>) in.readObject();
+            // if you get a class not found error at the line below, try deleting/recreating the .ser file and run main again.
+            accDictionary = (HashMap<String, User>)in.readObject();
             Account.setDictionary(accDictionary);
             in.close();
             fileIn.close();
         } catch (IOException i) {
             System.out.println("accounts.ser not found.\nCreating a new account dictionary...");
-            accDictionary = new HashMap<String, Users>();
+            accDictionary = new HashMap<String, User>();
             Account.setDictionary(accDictionary);
             Account.createAccount("admin", "123", 1);
         } catch (ClassNotFoundException c) {
@@ -44,11 +50,12 @@ public class ManagementSystem {
             while (user == 0) {
                 System.out.println("Incorrect username or password.");
                 System.out.print("Would you like to try again (y or n)? ");
-                String input = scan.nextLine();
+                String input = scan.next();
 
                 // Loop to get the correct "y" or "n" input
                 while (!input.equals("y") && !input.equals("n")) {
                     System.out.print("Please input y or n: ");
+                    input = scan.next();
                 }
 
                 // Exit program if user inputs "n"
