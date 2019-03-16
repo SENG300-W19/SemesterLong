@@ -16,7 +16,7 @@ public class Patient extends User {
      * Variables for patient's personal info
      */
     // since a doctors extends a patient, this will list all doctors in their department. (for now)
-    public LinkedList<Doctor> doctors; 
+    public LinkedList<User> doctors = new LinkedList<>();
 
     /**
      * Method to edit the patients info on account creation
@@ -50,11 +50,11 @@ public class Patient extends User {
         super(username, password, 3);
     }
 
-	public LinkedList<Doctor> getDoctors() {
+	public LinkedList<User> getDoctors() {
 		return doctors;
 	}
 
-	public void setDoctors(LinkedList<Doctor> doctors) {
+	public void setDoctors(LinkedList<User> doctors) {
 		this.doctors = doctors;
 	}
 }

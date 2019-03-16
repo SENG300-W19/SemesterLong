@@ -126,7 +126,12 @@ public class User implements Serializable {
      */
     public void setName() {
         Info form = new Info();
-        form.init();
+        String firstName = form.getFirstName();
+        String lastName = form.getLastName();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        form.close();
+        // figure out how to get info from textfields in Info to here
 
         /**
     	Scanner in = new Scanner(System.in);

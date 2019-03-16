@@ -2,6 +2,7 @@ package gui;
 
 import users.Admin;
 import data.Account;
+import users.User;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -30,7 +31,7 @@ public class Login {
                 super.mouseReleased(e);
                 String username  = formattedTextField1.getText();
                     String password = String.valueOf(passwordField1.getPassword());
-                    Boolean debug = debugRadioButton.isSelected();
+                    boolean debug = debugRadioButton.isSelected();
                     Integer accountType = comboBox1.getSelectedIndex()+1;
                     if (debug) {
                         System.out.println(username);
@@ -40,27 +41,29 @@ public class Login {
                     try {
                         FileInputStream fileIn;
                         ObjectInputStream in;
+                        fileIn = new FileInputStream("accounts.ser");
+                        in = new ObjectInputStream(fileIn);
+                        HashMap<String, User> dictionary = (HashMap<String, User>)in.readObject();
+                        Account.setDictionary(dictionary);
+                        in.close();
+                        fileIn.close();
                         switch (accountType) {
                             case 1:
-                                fileIn = new FileInputStream("admins.ser");
-                                in = new ObjectInputStream(fileIn);
-                                HashMap<String, Admin> adminDictionary = (HashMap<String, Admin>)in.readObject();
-                                Account.setAdminDictionary(adminDictionary);
-                                in.close();
-                                fileIn.close();
+
                                 break;
                             case 2: // deal with on other iteration
-                                 fileIn = new FileInputStream("doctors.ser");
-                                 break;
+
+                                break;
                             case 3: // deal with on other iteration
-                                 fileIn = new FileInputStream("patients.ser");
+
                                  break;
                         }
 
 
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(outer, "No accounts detected, creating new admin account");
-                        HashMap<String, Admin> adminDictionary = new HashMap<>();
+                        HashMap<String, User> dictionary = new HashMap<>();
+                        Account.setDictionary(dictionary);
                         Account.createAccount("admin", "123", 1);
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(outer, "Issues getting accounts");
