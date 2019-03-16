@@ -28,7 +28,7 @@ public class Menu {
                     "0. Exit\n");
             System.out.print("What would you like to do: ");
             input = scan.nextInt();
-            while (input < 0 || input > 7) {
+            while (input < 0 || input > 6) {
                 System.out.print("\n");
                 System.out.print("Please input a valid menu item: ");
                 input = scan.nextInt();
@@ -154,10 +154,11 @@ public class Menu {
             	}
             } else if (input == 6) {
                 listUsers();
-            } else if (input == 7) {
+            }
+            /*else if (input == 7) {
                 Patient patient = (Patient) Account.getDictionary().get("patient1");
                 patient.listDoctors();
-            }
+            }*/
         }
         System.exit(0);
     }
@@ -346,11 +347,11 @@ public class Menu {
             System.out.println("Edit " + username.getUsername() + " information:\n" +
                     "1. Edit first name\n" +
                     "2. Edit last name\n" +
-                    "3. Add doctor\n" +
-                    "4. Remove doctor\n" +
+                    "3. Add doctor (Disabled)\n" +
+                    "4. Remove doctor (Disabled)\n" +
                     "0. Return to main menu");
             input = scan.nextInt();
-            while (input < 0 || input > 4) {
+            while (input < 0 || input > 2) {
                 System.out.print("Please input a valid menu option: ");
                 input = scan.nextInt();
             }
