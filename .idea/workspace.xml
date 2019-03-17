@@ -53,10 +53,10 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="23" />
-    <option name="width" value="1920" />
-    <option name="height" value="1177" />
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="x" value="1920" />
+    <option name="width" value="1440" />
+    <option name="height" value="2560" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
