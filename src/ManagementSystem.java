@@ -3,8 +3,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import data.*;
+import gui.Menu;
 import users.*;
-import gui.*;
 
 import java.io.*;
 
@@ -50,11 +50,12 @@ public class ManagementSystem implements Serializable {
             while (user == 0) {
                 System.out.println("Incorrect username or password.");
                 System.out.print("Would you like to try again (y or n)? ");
-                String input = scan.nextLine();
+                String input = scan.next();
 
                 // Loop to get the correct "y" or "n" input
                 while (!input.equals("y") && !input.equals("n")) {
                     System.out.print("Please input y or n: ");
+                    input = scan.next();
                 }
 
                 // Exit program if user inputs "n"
@@ -68,4 +69,6 @@ public class ManagementSystem implements Serializable {
 
         Menu.prompt(user);
     }
+
+
 }

@@ -18,7 +18,7 @@ public class Doctor extends User {
 	
 	private static final long serialVersionUID = 1L;
 	private String specialty = "General Practicioner";
-	private static Boolean surgeon = false;
+	private Boolean surgeon = false;
 	private LinkedList<User> patients = new LinkedList<User>();
 	private Schedule schedule = new Schedule();
 
@@ -61,8 +61,10 @@ public class Doctor extends User {
 	 * displays all members of the patient list to terminal
 	 */
 	public void listPatients() {
-		for (User p : this.patients) {
-			System.out.println((this.patients.indexOf(p)+1)+" "+p.getLastName()+", "+p.getFirstName());
+		if (!patients.isEmpty()) {
+			for (User p : this.patients) {
+				System.out.println((this.patients.indexOf(p) + 1) + " " + p.getLastName() + ", " + p.getFirstName());
+			}
 		}
 	}
 	
@@ -118,10 +120,14 @@ public class Doctor extends User {
 	 * toggles boolean of weather or not the doctor is a surgeon, which is a doctor is not on creation of the object.
 	 */
 	public void toggleSurgeon() {
-		Doctor.surgeon = !(Doctor.surgeon);
+		this.surgeon = !(this.surgeon);
 		String toDisplay = "Doctor "+this.getLastName()+" is ";
-		if (Doctor.surgeon) toDisplay.concat("a Surgeon");
-		else toDisplay.concat("not a Surgeon");
+		if (this.surgeon) {
+			toDisplay = toDisplay.concat("a Surgeon");
+		}
+		else  {
+			toDisplay = toDisplay.concat("not a Surgeon");
+		}
 		System.out.println(toDisplay);
 	}
 	 /**
@@ -129,7 +135,7 @@ public class Doctor extends User {
 	  * @return weather or not the doctor is a surgeon.
 	  */
 	public boolean isSurgeon() {
-		return Boolean.valueOf(Doctor.surgeon);
+		return this.surgeon;
 	}
 	
 	/**
