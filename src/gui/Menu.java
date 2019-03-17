@@ -236,7 +236,7 @@ public class Menu {
                 System.out.print("Surgeon status: " + ((Doctor) username).isSurgeon());
                 break;
             case 3:
-                ((Patient) username).listDoctors();
+                //((Patient) username).listDoctors();
                 break;
             default:
                 break;
