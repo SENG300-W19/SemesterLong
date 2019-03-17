@@ -15,7 +15,6 @@ public class Info {
     private JButton confirmButton;
 
     public Info() {
-        JFrame frame = init();
         confirmButton.addMouseListener(new MouseAdapter() {
             /**
              * {@inheritDoc}
@@ -28,7 +27,6 @@ public class Info {
                 int option = JOptionPane.showConfirmDialog(null,"Proceed with changes?");
                 switch(option) {
                     case 0: //YES
-                        frame.dispose();
                         break;
                     case 1: //NO
                         break;
@@ -39,15 +37,16 @@ public class Info {
         });
     }
 
-    private JFrame init() {
-        JFrame create = new JFrame("Info");
-        create.setContentPane(new Info().frame);
-        create.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        create.setLocationRelativeTo(null);
-        create.pack();
-        create.setVisible(true);
-        return create;
+    public JFrame init() {
+        JFrame frame = new JFrame("Info");
+        frame.setContentPane(new Info().frame);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.pack();
+        frame.setVisible(true);
+        return frame;
     }
+
     public String getFirstName() { return firstNameFormattedTextField.getText();}
     public String getLastName() {return lastNameFormattedTextField.getText();}
 
