@@ -402,7 +402,7 @@ public class Menu {
             yn2 = scan.next();
         }
         if (yn2.equals("y")) {
-            username.setFirstName(str2);
+            username.setLastName(str2);
         }
     }
 
