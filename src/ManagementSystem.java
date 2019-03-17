@@ -69,4 +69,6 @@ public class ManagementSystem implements Serializable {
 
         Menu.prompt(user);
     }
+
+
 }

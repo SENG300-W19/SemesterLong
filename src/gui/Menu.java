@@ -160,6 +160,19 @@ public class Menu {
                 patient.listDoctors();
             }*/
         }
+
+        try {
+            FileOutputStream fileOut =
+                    new FileOutputStream("accounts.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(Account.getDictionary());
+            out.close();
+            fileOut.close();
+            System.out.println("\nAccounts are saved.\n");
+        } catch (IOException i) {
+            System.out.println("Could not successfully save accounts.ser.");
+            i.printStackTrace();
+        }
         System.exit(0);
     }
 
@@ -233,7 +246,7 @@ public class Menu {
             case 2:
                 ((Doctor) username).listPatients();
                 System.out.print("Specialty: " + ((Doctor) username).getSpecialty() + "\n");
-                System.out.print("Surgeon status: " + ((Doctor) username).isSurgeon());
+                //System.out.print("Surgeon status: " + ((Doctor) username).isSurgeon() + "\n");
                 break;
             case 3:
                 //((Patient) username).listDoctors();
@@ -280,6 +293,7 @@ public class Menu {
                     "1. Edit first name\n" +
                     "2. Edit last name\n" +
                     "0. Return to main menu");
+            System.out.print("What would you like to do: ");
             input = scan.nextInt();
             while (input < 0 || input > 2) {
                 System.out.print("Please input a valid menu option: ");
@@ -306,10 +320,11 @@ public class Menu {
                     "1. Edit first name\n" +
                     "2. Edit last name\n" +
                     "3. Add patient\n" +
-                    "4. Remove patient\n" +
+                    "4. Remove patient (Disabled)\n" +
                     "5. Change specialty\n" +
-                    "6. Toggle Surgeon Status\n" +
+                    "6. Toggle Surgeon Status (Disabled)\n" +
                     "0. Return to main menu");
+            System.out.print("What would you like to do: ");
             input = scan.nextInt();
             while (input < 0 || input > 6) {
                 System.out.print("Please input a valid menu option: ");
@@ -326,13 +341,13 @@ public class Menu {
                     addPatient(username);
                     break;
                 case 4:
-                    removePatient(username);
+                    //removePatient(username);
                     break;
                 case 5:
                     changeSpecialty(username);
                     break;
                 case 6:
-                    toggleSurgeon(username);
+                    //toggleSurgeon(username);
                     break;
                 default:
                     break;
@@ -350,6 +365,7 @@ public class Menu {
                     "3. Add doctor (Disabled)\n" +
                     "4. Remove doctor (Disabled)\n" +
                     "0. Return to main menu");
+            System.out.print("What would you like to do: ");
             input = scan.nextInt();
             while (input < 0 || input > 2) {
                 System.out.print("Please input a valid menu option: ");
@@ -379,7 +395,7 @@ public class Menu {
         System.out.print("Enter new first name: ");
         String str = scan.next();
         System.out.print("Change first name from " + username.getFirstName()
-                + " to " + str + "? (y or n)");
+                + " to " + str + " (y or n)? ");
         String yn = scan.next();
         while (!yn.equals("y") && !yn.equals("n")) {
             System.out.print("Please input y or n: ");
@@ -394,8 +410,8 @@ public class Menu {
         Scanner scan = new Scanner(System.in);
         System.out.print("Enter new last name: ");
         String str2 = scan.next();
-        System.out.print("Change last name from " + username.getFirstName()
-                + " to " + str2 + "? (y or n)");
+        System.out.print("Change last name from " + username.getLastName()
+                + " to " + str2 + " (y or n)? ");
         String yn2 = scan.next();
         while (!yn2.equals("y") && !yn2.equals("n")) {
             System.out.print("Please input y or n: ");
@@ -416,7 +432,7 @@ public class Menu {
     }
 
     private static void removeDoctor(User username) {
-        ((Doctor) username).removePatient();
+        ((Patient) username).removeDoctor();
     }
 
     private static void addPatient(User username) {
@@ -429,7 +445,7 @@ public class Menu {
     }
 
     private static void removePatient(User username) {
-        ((Patient) username).removeDoctor();
+        ((Doctor) username).removePatient();
     }
 
     private static void changeSpecialty(User username) {
