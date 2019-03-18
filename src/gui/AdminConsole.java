@@ -25,9 +25,7 @@ public class AdminConsole {
     private JFormattedTextField formattedTextField5;
     private JPasswordField passwordField3;
     private JTabbedPane tabbedPane2;
-    private JComboBox comboBox2;
-    private JComboBox comboBox3;
-    private JComboBox comboBox4;
+    private JButton editButton;
 
     public AdminConsole() {
         frame.setContentPane(content);
@@ -104,6 +102,23 @@ public class AdminConsole {
                 passwordField3.setText(Account.getDictionary().get(key).getPassword());
                 formattedTextField4.setText(Account.getDictionary().get(key).getFirstName());
                 formattedTextField5.setText(Account.getDictionary().get(key).getLastName());
+            }
+        });
+        editButton.addMouseListener(new MouseAdapter() {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                int option = JOptionPane.showConfirmDialog(null, "Commit Changes?");
+                switch (option) {
+                    case 0:
+                        Account.getDictionary().get(accountsBox.getSelectedItem().toString()).setFirstName(formattedTextField4.getText());
+                        Account.getDictionary().get(accountsBox.getSelectedItem().toString()).setFirstName(formattedTextField5.getText());
+                }
             }
         });
     }
