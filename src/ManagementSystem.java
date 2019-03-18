@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import data.*;
+import gui.Login;
 import gui.Menu;
 import users.*;
 
@@ -12,6 +13,8 @@ public class ManagementSystem implements Serializable {
 
     @SuppressWarnings("unchecked")
 	public static void main(String[] args) {
+        Login log = new Login();
+        log.init();
         HashMap<String, User> accDictionary = null;
         try {
             FileInputStream fileIn = new FileInputStream("accounts.ser");

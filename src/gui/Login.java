@@ -23,7 +23,7 @@ public class Login {
     private JRadioButton debugRadioButton;
     private Account account;
 
-    private Login() {
+    public Login() {
 
         CONFIRMButton.addMouseListener(new MouseAdapter() {
             @Override
