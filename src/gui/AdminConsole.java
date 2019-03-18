@@ -104,23 +104,6 @@ public class AdminConsole {
                 formattedTextField5.setText(Account.getDictionary().get(key).getLastName());
             }
         });
-        editButton.addMouseListener(new MouseAdapter() {
-            /**
-             * {@inheritDoc}
-             *
-             * @param e
-             */
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                int option = JOptionPane.showConfirmDialog(null, "Commit Changes?");
-                switch (option) {
-                    case 0:
-                        Account.getDictionary().get(accountsBox.getSelectedItem().toString()).setFirstName(formattedTextField4.getText());
-                        Account.getDictionary().get(accountsBox.getSelectedItem().toString()).setFirstName(formattedTextField5.getText());
-                }
-            }
-        });
     }
 
     public void close() {
