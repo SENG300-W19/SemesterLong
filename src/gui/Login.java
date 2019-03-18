@@ -18,8 +18,8 @@ public class Login {
     private JButton CONFIRMButton;
     private JPasswordField passwordField1;
     private JPanel outer;
+    private JFrame frame = new JFrame("Login");
     private JFormattedTextField formattedTextField1;
-    private JComboBox comboBox1;
     private JRadioButton debugRadioButton;
     private Account account;
 
@@ -32,11 +32,9 @@ public class Login {
                 String username  = formattedTextField1.getText();
                     String password = String.valueOf(passwordField1.getPassword());
                     boolean debug = debugRadioButton.isSelected();
-                    Integer accountType = comboBox1.getSelectedIndex()+1;
                     if (debug) {
                         System.out.println(username);
                         System.out.println(password);
-                        System.out.println(accountType);
                     }
                     try {
                         FileInputStream fileIn;
@@ -47,16 +45,20 @@ public class Login {
                         Account.setDictionary(dictionary);
                         in.close();
                         fileIn.close();
+                        int accountType = Account.login(username, password);
                         switch (accountType) {
                             case 1:
-
+                                frame.dispose();
+                                AdminConsole console = new AdminConsole();
                                 break;
                             case 2: // deal with on other iteration
-
+                                frame.dispose();
                                 break;
                             case 3: // deal with on other iteration
-
+                                frame.dispose();
                                  break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "Invalid Username/Password");
                         }
 
 
@@ -81,8 +83,7 @@ public class Login {
     }
 
     public void init() {
-        JFrame frame = new JFrame("Login");
-        frame.setContentPane(new Login().outer);
+        frame.setContentPane(this.outer);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();

@@ -11,9 +11,7 @@ public class Account{
 
     // HashMap of all the accounts in the database. Maps a User object to a username.
     private static HashMap<String, User> accDictionary;
-    private static HashMap<String, Admin> adminDictionary;
-    private static HashMap<String, Doctor> doctorDictionary;
-    private static HashMap<String, Patient> patientDictionary;
+
 
 
     /**
@@ -23,9 +21,7 @@ public class Account{
     public static void setDictionary(HashMap<String, User> dictionary) {
         accDictionary = dictionary;
     }
-    public static void setAdminDictionary(HashMap<String, Admin> dictionary) {adminDictionary = dictionary;}
-    public static void setDoctorDictionary(HashMap<String, Doctor> dictionary) {doctorDictionary = dictionary;}
-    public static void setPatientDictionary(HashMap<String, Patient> dictionary) {patientDictionary = dictionary;}
+
 
     /**
      * Getter for the HashMap object
@@ -52,17 +48,17 @@ public class Account{
     	switch(accountType) {
     	case 1: 
     		Admin admin = new Admin(username, password);
-    		admin.setName();
+    		admin.setInfo(admin);
             accDictionary.put(username, admin);
     		break;
     	case 2:
     		Doctor doctor = new Doctor(username,password);
-    		doctor.setName();
+    		doctor.setInfo(doctor);
             accDictionary.put(username, doctor);
     		break;
     	case 3:
     		Patient acc = new Patient(username,password);
-    		acc.setName();
+    		acc.setInfo(acc);
             accDictionary.put(username, acc);
     		break;
     	}
@@ -103,6 +99,9 @@ public class Account{
         return 0;
     }
 
+    public static List<String> listUsernames() {
+        return new ArrayList<>(getDictionary().keySet());
+    }
 
 
 }

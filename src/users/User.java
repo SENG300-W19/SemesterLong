@@ -2,6 +2,7 @@ package users;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.time.LocalDate;
 
 import data.Schedule;
 import gui.Info;
@@ -16,7 +17,10 @@ public class User implements Serializable {
     public String getFirstName() {
 		return firstName;
 	}
-
+    private LocalDate birthday;
+    private void setBirthday(LocalDate date) {
+        this.birthday = date;
+    }
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
@@ -124,30 +128,9 @@ public class User implements Serializable {
     /**
      * takes input from terminal to set the name of the user object
      */
-    public void setName() {
-        Info form = new Info();
+    public void setInfo(User user) {
+        Info form = new Info(user);
         form.init();
-        String firstName = form.getFirstName();
-        String lastName = form.getLastName();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        // figure out how to get info from textfields in Info to here
-
-        /**
-    	Scanner in = new Scanner(System.in);
-    	boolean valid = false;
-    	while(!valid) {
-    		System.out.print("First Name: ");
-    		String first = in.next();
-    		if (first.matches("[a-zA-Z]+") == false) break;
-    		this.firstName = first;
-    		System.out.print("Last Name: ");
-    		String last = in.next();
-    		if (last.matches("[a-zA-Z]+") == false) break;
-    		this.lastName = last; 
-    		valid = true; 
-    	}
-         */
     }
 
 }

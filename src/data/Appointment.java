@@ -14,7 +14,6 @@ import users.*;
  * 
  */
 public class Appointment implements Serializable{
-	
 	final String FORMAT_ERROR = "Invalid Formatting";
 	final String OOR = "Out of Range";
 	
