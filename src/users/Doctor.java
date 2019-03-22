@@ -21,6 +21,7 @@ public class Doctor extends User {
 	private Boolean surgeon = false;
 	private LinkedList<User> patients = new LinkedList<User>();
 	private Schedule schedule = new Schedule();
+	private int department = 1;				// 1. General Services department by default.
 
 
 	
@@ -32,7 +33,26 @@ public class Doctor extends User {
 	  * alphabetical order.
 	  * @param toAdd - Patient object to be added to the linked-list
 	  */
-	
+
+	/**
+	 * Console menu for doctors.
+	 * Currently has no functionality.
+	 */
+	public static void doctorMenu() {
+		Scanner scan = new Scanner(System.in);
+		int input = 1;
+		while (input != 0) {
+			System.out.print("Doctor Menu:\n" +
+					"0. Exit");
+			input = scan.nextInt();
+			while (input != 0) {
+				System.out.print("Please input 0 to exit: ");
+				input = scan.nextInt();
+			}
+		}
+		System.exit(0);
+	}
+
 	public void addPatient(Patient toAdd) {
 		if (patients.isEmpty()) patients.add(toAdd);
 		else {
@@ -155,6 +175,41 @@ public class Doctor extends User {
 	public LinkedList<User> returnPatients() {
 		LinkedList<User> toReturn = new LinkedList<User>(this.patients);
 		return toReturn; 
+	}
+
+	/**
+	 * Set doctor department
+	 * @param department
+	 */
+	public void setDepartment(int department) {
+		this.department = department;
+	}
+
+	/**
+	 * Get doctor department
+	 */
+	public String getDepartment() {
+		switch (department) {
+			case 1:
+				return "General Services";
+			case 2:
+				return "Cardiology";
+			case 3:
+				return "Nephrology";
+			case 4:
+				return "Neurology";
+			case 5:
+				return "Psychiatry";
+			case 6:
+				return "Oncology";
+			case 7:
+				return "Gastroenterology";
+			case 8:
+				return "Haemotology";
+			case 9:
+				return "Orthopaedics";
+		}
+		return "";
 	}
 }
 	

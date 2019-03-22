@@ -14,12 +14,28 @@ import users.*;
  * 
  */
 public class Appointment implements Serializable{
-	
 	final String FORMAT_ERROR = "Invalid Formatting";
 	final String OOR = "Out of Range";
-	
-	public LocalDateTime start;
-	public LocalDateTime finish;
+
+	public LocalDateTime getStart() {
+		return start;
+	}
+
+	public void setStart(LocalDateTime start) {
+		this.start = start;
+	}
+
+	public LocalDateTime getFinish() {
+		return finish;
+	}
+
+	public void setFinish(LocalDateTime finish) {
+		this.finish = finish;
+	}
+
+	private LocalDateTime start;
+	private LocalDateTime finish;
+
 	public User patient;
 	public User doctor; 
 

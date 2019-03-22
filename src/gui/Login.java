@@ -2,6 +2,7 @@ package gui;
 
 import users.Admin;
 import data.Account;
+import users.User;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -17,12 +18,12 @@ public class Login {
     private JButton CONFIRMButton;
     private JPasswordField passwordField1;
     private JPanel outer;
+    private JFrame frame = new JFrame("Login");
     private JFormattedTextField formattedTextField1;
-    private JComboBox comboBox1;
     private JRadioButton debugRadioButton;
     private Account account;
 
-    private Login() {
+    public Login() {
 
         CONFIRMButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -30,37 +31,43 @@ public class Login {
                 super.mouseReleased(e);
                 String username  = formattedTextField1.getText();
                     String password = String.valueOf(passwordField1.getPassword());
-                    Boolean debug = debugRadioButton.isSelected();
-                    Integer accountType = comboBox1.getSelectedIndex()+1;
+                    boolean debug = debugRadioButton.isSelected();
                     if (debug) {
                         System.out.println(username);
                         System.out.println(password);
-                        System.out.println(accountType);
                     }
                     try {
                         FileInputStream fileIn;
                         ObjectInputStream in;
-                        switch (accountType) {
-                            case 1:
-                                fileIn = new FileInputStream("admins.ser");
-                                in = new ObjectInputStream(fileIn);
-                                HashMap<String, Admin> adminDictionary = (HashMap<String, Admin>)in.readObject();
-                                Account.setAdminDictionary(adminDictionary);
-                                in.close();
-                                fileIn.close();
-                                break;
-                            case 2: // deal with on other iteration
-                                 fileIn = new FileInputStream("doctors.ser");
-                                 break;
-                            case 3: // deal with on other iteration
-                                 fileIn = new FileInputStream("patients.ser");
-                                 break;
+                        fileIn = new FileInputStream("accounts.ser");
+                        in = new ObjectInputStream(fileIn);
+                        HashMap<String, User> dictionary = (HashMap<String, User>)in.readObject();
+                        Account.setDictionary(dictionary);
+                        in.close();
+                        fileIn.close();
+                        User acc = Account.login(username, password);
+                        if (acc != null) {
+                            switch (acc.getAccountType()) {
+                                case 1:
+                                    frame.dispose();
+                                    AdminConsole console = new AdminConsole();
+                                    break;
+                                case 2: // deal with on other iteration
+                                    frame.dispose();
+                                    break;
+                                case 3: // deal with on other iteration
+                                    frame.dispose();
+                                    break;
+                                default:
+                                    JOptionPane.showMessageDialog(null, "Invalid Username/Password");
+                            }
                         }
 
 
                     } catch (IOException ex) {
                         JOptionPane.showMessageDialog(outer, "No accounts detected, creating new admin account");
-                        HashMap<String, Admin> adminDictionary = new HashMap<>();
+                        HashMap<String, User> dictionary = new HashMap<>();
+                        Account.setDictionary(dictionary);
                         Account.createAccount("admin", "123", 1);
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(outer, "Issues getting accounts");
@@ -78,8 +85,7 @@ public class Login {
     }
 
     public void init() {
-        JFrame frame = new JFrame("Login");
-        frame.setContentPane(new Login().outer);
+        frame.setContentPane(this.outer);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
