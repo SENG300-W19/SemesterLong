@@ -45,20 +45,22 @@ public class Login {
                         Account.setDictionary(dictionary);
                         in.close();
                         fileIn.close();
-                        int accountType = Account.login(username, password);
-                        switch (accountType) {
-                            case 1:
-                                frame.dispose();
-                                AdminConsole console = new AdminConsole();
-                                break;
-                            case 2: // deal with on other iteration
-                                frame.dispose();
-                                break;
-                            case 3: // deal with on other iteration
-                                frame.dispose();
-                                 break;
-                            default:
-                                JOptionPane.showMessageDialog(null, "Invalid Username/Password");
+                        User acc = Account.login(username, password);
+                        if (acc != null) {
+                            switch (acc.getAccountType()) {
+                                case 1:
+                                    frame.dispose();
+                                    AdminConsole console = new AdminConsole();
+                                    break;
+                                case 2: // deal with on other iteration
+                                    frame.dispose();
+                                    break;
+                                case 3: // deal with on other iteration
+                                    frame.dispose();
+                                    break;
+                                default:
+                                    JOptionPane.showMessageDialog(null, "Invalid Username/Password");
+                            }
                         }
 
 

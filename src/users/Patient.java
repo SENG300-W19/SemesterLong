@@ -18,7 +18,26 @@ public class Patient extends User {
      * Variables for patient's personal info
      */
     // since a doctors extends a patient, this will list all doctors in their department. (for now)
-    public LinkedList<User> doctors = new LinkedList<>();
+    private LinkedList<User> doctors = new LinkedList<>();
+
+    /**
+     * Console menu for patients
+     * Currently has no functionality.
+     */
+    public static void patientMenu() {
+        Scanner scan = new Scanner(System.in);
+        int input = 1;
+        while (input != 0) {
+            System.out.print("Patient Menu:\n" +
+                    "0. Exit");
+            input = scan.nextInt();
+            while (input != 0) {
+                System.out.print("Please input 0 to exit: ");
+                input = scan.nextInt();
+            }
+        }
+        System.exit(0);
+    }
 
     /**
      * Method to edit the patients info on account creation
@@ -89,22 +108,27 @@ public class Patient extends User {
         // list all patients
         // remove patient at certain index (1 . . . . N), use 0 to cancel
         Scanner input = new Scanner(System.in);
-        this.listDoctors();
-        System.out.println("Select the number of the user you would like to remove, or press 0 to exit: ");
-        Boolean inputValid = false;
-        while (!inputValid) {
-            String usrInput = input.next();
-            if (usrInput.matches("\\d")) {
+        if (doctors.isEmpty()) {
+            System.out.println("Patient has no doctors.");
+        } else {
+            this.listDoctors();
+            System.out.println("Select the number of the user you would like to remove, or press 0 to exit: ");
+            Boolean inputValid = false;
+            while (!inputValid) {
+                String usrInput = input.next();
+                if (usrInput.matches("\\d")) {
 
 
-            } else {
-                System.out.println("Invalid token\n");
+                } else {
+                    System.out.println("Invalid token\n");
+                }
             }
         }
     }
 
     public void listDoctors() {
         if (!(this.doctors.isEmpty())) {
+            System.out.println("Patient's doctor: ");
             for (User p : this.doctors) {
                 System.out.println((this.doctors.indexOf(p) + 1) + " " + p.getLastName() + ", " + p.getFirstName());
             }

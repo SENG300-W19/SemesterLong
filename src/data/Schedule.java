@@ -44,8 +44,12 @@ public class Schedule implements Serializable {
 				if (toAdd.getStart().isAfter(app.getStart()) && toAdd.getStart().isBefore(app.getFinish())) {
 					throw new Exception("Conflicting Date");
 				}
+
+				if (app.getStart().getHour() <= toAdd.getStart().getHour() || toAdd.getStart().getHour() <= app.getFinish().getHour()){
+					throw new Exception("Sorry! Appointment time is filled up. Try another hour or minute");
+				}
 			}
-			// insert according to date
+			list.add(toAdd);
 
 
 		} catch (Exception e) {
