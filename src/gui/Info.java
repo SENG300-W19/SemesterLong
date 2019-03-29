@@ -3,7 +3,10 @@ package gui;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.time.LocalDate;
+
+import data.Account;
 import users.*;
 
 public class Info {
@@ -40,6 +43,11 @@ public class Info {
                         System.out.println("YES");//YES
                         setFirstName(user);
                         setLastName(user);
+                        try {
+                            Account.writeToFile();
+                        } catch (IOException i) {
+                            JOptionPane.showMessageDialog(null, "Unable to write to file");
+                        }
                         JOptionPane.showMessageDialog(null, "Changes Saved");
                         frame.dispose();
                         break;

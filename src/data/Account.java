@@ -63,12 +63,7 @@ public class Account{
                 break;
         }
         try {
-            FileOutputStream fileOut =
-                    new FileOutputStream("accounts.ser");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(accDictionary);
-            out.close();
-            fileOut.close();
+            writeToFile();
             System.out.println("\nAccount " + username + " is created and saved.\n");
         } catch (IOException i) {
             System.out.println("Could not successfully create/save accounts.ser.");
@@ -124,5 +119,17 @@ public class Account{
         return new ArrayList<>(getDictionary().keySet());
     }
 
-
+    public static void writeToFile() throws IOException {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("accounts.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(accDictionary);
+            out.close();
+            fileOut.close();
+            System.out.println("Changes made.");
+        } catch (IOException e) {
+            System.out.println("Issues making edits");
+            e.printStackTrace();
+        }
+    }
 }
