@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.text.Collator;
 /**
- * 
+ * @author dylnstwrt
  * not used, appropriate methods moved into user class, refactoring required
  *
  */
@@ -19,6 +19,7 @@ public class Patient extends User {
      */
     // since a doctors extends a patient, this will list all doctors in their department. (for now)
     private LinkedList<User> doctors = new LinkedList<>();
+
 
     /**
      * Console menu for patients
@@ -71,6 +72,8 @@ public class Patient extends User {
     public Patient(String username, String password) {
         super(username, password, 3);
     }
+
+    public Patient(User user) {super(user.getUsername(), user.getPassword(), 3);}
 
     public LinkedList<User> getDoctors() {
         return doctors;

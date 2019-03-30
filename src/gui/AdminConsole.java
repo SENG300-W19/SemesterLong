@@ -1,18 +1,18 @@
 package gui;
 
 import data.Account;
+import users.Doctor;
 import users.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 
+/**
+ * @author dylnstwrt
+ */
 public class AdminConsole {
     private JFrame frame = new JFrame("Admin Portal");
     private JTabbedPane tabbedPane1;
@@ -29,6 +29,10 @@ public class AdminConsole {
       "Name, First","Name, Last","Role","Username","Department", "DOB"
     };
 
+    /**
+     * constructor for adminConsole
+     * @todo refractor all classes for consistency
+     */
     public AdminConsole() {
         frame.setContentPane(content);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,8 +90,24 @@ public class AdminConsole {
                 for (String s : Account.listUsernames()) {
                     User toAdd = dict.get(s);
                     boolean dupe = false;
+                    String accountType = "";
+                    String department = "";
+                    switch (toAdd.getAccountType()) {
+                        case 1:
+                            accountType = "Administrator";
+                            department = "Administration";
+                            break;
+                        case 2:
+                            accountType = "Doctor";
+                            Doctor acc = new Doctor(toAdd);
+                            department = acc.getDepartment();
+                            break;
+                        default:
+                            accountType = "Patient";
+                            department = "N/A";
+                    }
                      Object[] toDisplay  = {toAdd.getFirstName(), toAdd.getLastName(),
-                             toAdd.getAccountType(), toAdd.getUsername()};
+                             accountType, toAdd.getUsername(),department, toAdd.getBirthday()};
                      for (int i = 0; i < tableModel.getRowCount(); i++) {
                         if (s.equals(tableModel.getValueAt(i,3))) {
                             dupe = true;
@@ -98,18 +118,34 @@ public class AdminConsole {
                 }
             }
         });
-
+        /**
+         * listener for doubleclick on a user to get their schedule or to edit their information.
+         */
         accountsList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     int option =
-                            JOptionPane.showConfirmDialog(null, "Open this users schedule?");
+                            JOptionPane.showOptionDialog(null, "Show schedule or edit?", "User Info",
+                                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"View", "Edit", "Cancel"}, null );
+                    System.out.println(option);
                     switch (option) {
+                        // view schedule
                         case 0:
                             int row = accountsList.getSelectedRow();
                             String username = accountsList.getValueAt(row, 3).toString();
+                            User acc = Account.getDictionary().get(username);
+                            ScheduleView view = new ScheduleView(acc);
                             break;
+                        // edit information
+                        case 1:
+                            /*
+                            requires restart to show changes to info in the accounts page
+                             */
+                            int row1 = accountsList.getSelectedRow();
+                            String username1 = accountsList.getValueAt(row1, 3).toString();
+                            Info init = new Info(Account.getDictionary().get(username1));
+                            init.init();
                     }
                 }
             }

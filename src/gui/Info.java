@@ -1,18 +1,24 @@
 package gui;
 
 import javax.swing.*;
+import javax.swing.event.ListDataListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import data.Account;
 import users.*;
 
+/**
+ * @author dylnstwrt
+ */
 public class Info {
     private JFormattedTextField lastNameFormattedTextField;
     private JFormattedTextField firstNameFormattedTextField;
-    private JComboBox yearBox;
+    private JComboBox<String> yearBox;
     private JComboBox dayBox;
     private JComboBox monthBox;
     private JFrame frame = new JFrame("Info");;
@@ -43,6 +49,7 @@ public class Info {
                         System.out.println("YES");//YES
                         setFirstName(user);
                         setLastName(user);
+                        setBirthday(user);
                         try {
                             Account.writeToFile();
                         } catch (IOException i) {
@@ -91,6 +98,16 @@ public class Info {
     private void setLastName(User user) {user.setLastName(lastNameFormattedTextField.getText());}
     public String getLastName() {return this.lastName;}
 
+    /**
+     * TODO needs error checking
+     * @param user
+     */
+    private void setBirthday(User user) {
+        int month = monthBox.getSelectedIndex()+1;
+        int day = dayBox.getSelectedIndex()+1;
+        int year = Integer.parseInt(yearBox.getSelectedItem().toString());
+        user.setBirthday(LocalDate.of(year, month, day));
+    }
 
 }
 

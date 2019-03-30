@@ -13,6 +13,11 @@ import java.io.ObjectInputStream;
 import java.util.HashMap;
 
 @SuppressWarnings("unchecked")
+
+/**
+ * @author dylnstwrt
+ * Class for GUI login screen.
+ */
 public class Login {
     private JButton CANCELButton;
     private JButton CONFIRMButton;
@@ -24,7 +29,12 @@ public class Login {
     private Account account;
 
     public Login() {
-
+        /**
+         * Listener for confirm button, which checks if an accounts.ser db has been initialized; makes a new one and
+         * default admin account with credentials admin:123.
+         * If accounts.ser already exists, will try to login with the selected credentials.
+         * Then opens the corresponding GUI class for their terminal.
+         */
         CONFIRMButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -53,9 +63,11 @@ public class Login {
                                     AdminConsole console = new AdminConsole();
                                     break;
                                 case 2: // deal with on other iteration
+                                    ScheduleView docView = new ScheduleView(acc);
                                     frame.dispose();
                                     break;
                                 case 3: // deal with on other iteration
+                                    ScheduleView view = new ScheduleView(acc);
                                     frame.dispose();
                                     break;
                                 default:

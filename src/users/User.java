@@ -18,8 +18,12 @@ public class User implements Serializable {
 		return firstName;
 	}
     private LocalDate birthday;
-    private void setBirthday(LocalDate date) {
+    public void setBirthday(LocalDate date) {
         this.birthday = date;
+    }
+
+    public String getBirthday() {
+        return this.birthday.toString();
     }
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;

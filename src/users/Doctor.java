@@ -24,7 +24,9 @@ public class Doctor extends User {
 	private int department = 1;				// 1. General Services department by default.
 
 
-	
+	public Doctor(User user) {
+	    super(user.getUsername(),user.getPassword(),user.getAccountType());
+    }
 	public Doctor(String username, String password){
 		super(username, password, 2); 	
 	}

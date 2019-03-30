@@ -173,6 +173,7 @@ public class Admin extends User{
 							int min = scan.nextInt();
 							Appointment add_app = new Appointment(day, month, year, hour, min);
 							acc.getSchedule().addAppointment(add_app);
+							Account.writeToFile();
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
