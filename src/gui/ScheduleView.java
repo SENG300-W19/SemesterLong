@@ -1,5 +1,6 @@
 package gui;
 
+import data.Account;
 import data.Appointment;
 import data.Schedule;
 import exceptions.ScheduleException;
@@ -50,9 +51,14 @@ public class ScheduleView {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                DateSelect getDate = new DateSelect();
-                    JOptionPane.showMessageDialog(null, "Issue with date");
-            }
+                    try {
+                        DateSelect getDate = new DateSelect(user.getSchedule());
+                        Account.writeToFile();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Issue with date");
+                        e1.printStackTrace();
+                    }
+                }
         });
     }
 
