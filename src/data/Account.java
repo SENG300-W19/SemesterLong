@@ -113,12 +113,17 @@ public class Account{
 
     /**
      * author @Dylan
-     * @return
+     * @return list of strings which represent the list of usernames in the dictionary
      */
     public static List<String> listUsernames() {
         return new ArrayList<>(getDictionary().keySet());
     }
 
+    /**
+     * method to write out the dictionary to the .ser file, should be called when wanting to save changes in the dictionary.
+     * @throws IOException
+     * @author Dylan
+     */
     public static void writeToFile() throws IOException {
         try {
             FileOutputStream fileOut = new FileOutputStream("accounts.ser");
