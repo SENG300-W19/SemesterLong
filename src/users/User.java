@@ -2,8 +2,10 @@ package users;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.time.LocalDate;
 
 import data.Schedule;
+import gui.Info;
 
 public class User implements Serializable {
 
@@ -11,20 +13,47 @@ public class User implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public String firstName;
+	private String firstName;
     public String getFirstName() {
 		return firstName;
 	}
+    private LocalDate birthday;
+    public void setBirthday(LocalDate date) {
+        this.birthday = date;
+    }
 
+    public String getBirthday() {
+        return this.birthday.toString();
+    }
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String lastName;
-    public String username;
-    public String password;
-    public LinkedList<User> list = new LinkedList<User>();
-    public Schedule schedule = new Schedule();
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAccountType(int accountType) {
+        this.accountType = accountType;
+    }
+
+    private String lastName;
+    private String username;
+    private String password;
+    //privateLinkedList<User> list = new LinkedList<User>();
+    private Schedule schedule = new Schedule();
+
+    /**
+     * uses copy constructor in schedule class.
+     * @return copy of schedule
+     */
+    public Schedule getSchedule() {
+        return new Schedule(this.schedule);
+    }
 
     /** 0 = Not a user
      * 1 = Admin
@@ -42,7 +71,7 @@ public class User implements Serializable {
 
     /**
      * Constructor for creating a new user
-     * @param usernames
+     * @param username
      * @param password
      * @param accountType
      */
@@ -103,20 +132,9 @@ public class User implements Serializable {
     /**
      * takes input from terminal to set the name of the user object
      */
-    public void setName() {
-    	Scanner in = new Scanner(System.in);
-    	Boolean valid = false;
-    	while(!valid) {
-    		System.out.print("First Name: ");
-    		String first = in.next();
-    		if (first.matches("[a-zA-Z]+") == false) break;
-    		this.firstName = first;
-    		System.out.print("Last Name: ");
-    		String last = in.next();
-    		if (last.matches("[a-zA-Z]+") == false) break;
-    		this.lastName = last; 
-    		valid = true; 
-    	}
+    public void setInfo(User user) {
+        Info form = new Info(user);
+        form.init();
     }
 
 }

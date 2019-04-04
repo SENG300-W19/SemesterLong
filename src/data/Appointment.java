@@ -14,12 +14,44 @@ import users.*;
  * 
  */
 public class Appointment implements Serializable{
-	
 	final String FORMAT_ERROR = "Invalid Formatting";
 	final String OOR = "Out of Range";
-	
-	public LocalDateTime start;
-	public LocalDateTime finish;
+
+    /**
+     * getter for start time of an appointment
+     * @return
+     */
+	public LocalDateTime getStart() {
+		return start;
+	}
+
+    /**
+     * setter for start time of an appointment
+     * @param start
+     */
+	public void setStart(LocalDateTime start) {
+		this.start = start;
+	}
+
+    /**
+     * getter for endTime of appointment
+     * @return
+     */
+	public LocalDateTime getFinish() {
+		return finish;
+	}
+
+    /**
+     * setter for end time of appointment
+     * @param finish
+     */
+	public void setFinish(LocalDateTime finish) {
+		this.finish = finish;
+	}
+
+	private LocalDateTime start;
+	private LocalDateTime finish;
+
 	public User patient;
 	public User doctor; 
 
@@ -55,6 +87,7 @@ public class Appointment implements Serializable{
 	 * @param patient
 	 * @param doctor
 	 * @throws Exception
+     * @todo Implement this
 	 */
 	/**public void setParticipants(user patient, user doctor) throws Exception {
 		LinkedList<User> toCompare = this.doctor.returnPatients();
