@@ -1,7 +1,7 @@
 package gui;
 
-import users.Admin;
 import data.Account;
+import users.Doctor;
 import users.User;
 
 import javax.swing.*;
@@ -63,7 +63,7 @@ public class Login {
                                     AdminConsole console = new AdminConsole();
                                     break;
                                 case 2: // deal with on other iteration
-                                    ScheduleView docView = new ScheduleView(acc);
+                                    DoctorConsole docView = new DoctorConsole((Doctor) acc);
                                     frame.dispose();
                                     break;
                                 case 3: // deal with on other iteration
@@ -77,12 +77,12 @@ public class Login {
 
 
                     } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(outer, "No accounts detected, creating new admin account");
+                        JOptionPane.showMessageDialog(outer, "No accounts detected, creating new admin account,.");
                         HashMap<String, User> dictionary = new HashMap<>();
                         Account.setDictionary(dictionary);
                         Account.createAccount("admin", "123", 1);
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(outer, "Issues getting accounts");
+                        JOptionPane.showMessageDialog(outer, "Issues getting account.");
                         ex.printStackTrace();
                     }
             }

@@ -174,9 +174,8 @@ public class Doctor extends User {
 	 * 
 	 * @return linked list object copy of the list of patients.
 	 */
-	public LinkedList<User> returnPatients() {
-		LinkedList<User> toReturn = new LinkedList<User>(this.patients);
-		return toReturn; 
+	public LinkedList<User> getPatients() {
+		return patients;
 	}
 
 	/**
@@ -213,5 +212,6 @@ public class Doctor extends User {
 		}
 		return "";
 	}
+
 }
 	

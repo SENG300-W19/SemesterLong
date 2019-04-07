@@ -137,4 +137,36 @@ public class Account{
             e.printStackTrace();
         }
     }
+
+    public static ArrayList<User> getNames(int accType) {
+        ArrayList<User> users = new ArrayList<>();
+        switch (accType) {
+            case 1:
+                HashMap<String, User> dictionary = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary.entrySet()) {
+                    if (entry.getValue() instanceof Admin) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+            case 2:
+                HashMap<String, User> dictionary1 = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary1.entrySet()) {
+                    if (entry.getValue() instanceof Doctor) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+            case 3:
+                HashMap<String, User> dictionary2 = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary2.entrySet()) {
+                    if (entry.getValue() instanceof Patient) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+        }
+        return users;
+    }
+
 }

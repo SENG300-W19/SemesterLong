@@ -2,12 +2,14 @@ package users;
 
 import data.Account;
 import data.Appointment;
+import data.Schedule;
 import exceptions.ScheduleException;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -21,6 +23,11 @@ public class Admin extends User{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	// Variable for all appointment/day off requests
+	// All admins have access to this schedule
+	private static Schedule requests = new Schedule();
+
 
 	public Admin(String userName, String password) {
 		super (userName,password,1);
@@ -599,5 +606,13 @@ public class Admin extends User{
 			System.out.println(user.getUsername() + "'s department has been change to "
 					+ ((Doctor) user).getDepartment());
 		}
+	}
+
+	/**
+	 * Function to return schedule for all requests
+	 * @return Schedule of all requests
+	 */
+	public static Schedule getRequests() {
+		return requests;
 	}
 }

@@ -34,6 +34,7 @@ public class Info {
     }
 
     public Info(User user) {
+        init();
         confirmButton.addMouseListener(new MouseAdapter() {
             /**
              * {@inheritDoc}

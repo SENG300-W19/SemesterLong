@@ -144,7 +144,8 @@ public class AdminConsole {
                              */
                             int row1 = accountsList.getSelectedRow();
                             String username1 = accountsList.getValueAt(row1, 3).toString();
-                            Info init = new Info(Account.getDictionary().get(username1));
+                            User acc2 = Account.getDictionary().get(username1);
+                            Info init = new Info(Account.getDictionary().get(acc2));
                             init.init();
                     }
                 }

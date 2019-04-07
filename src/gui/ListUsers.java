@@ -26,7 +26,7 @@ public class ListUsers {
         switch(user.getAccountType()){
             case 2:
                 Doctor doc = new Doctor(user);
-                for (User p : doc.returnPatients()) {
+                for (User p : doc.getPatients()) {
                     model.addRow(new Object[] {
                             p.getLastName(),
                             p.getFirstName(),

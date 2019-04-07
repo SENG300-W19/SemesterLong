@@ -104,6 +104,11 @@ public class User implements Serializable {
     public int getAccountType() {
         return this.accountType;
     }
+
+
+    public String toString() {
+        return this.firstName + " " + this.lastName;
+    }
      /**
       * prints message to terminal depending on the value of the accountType
       */
