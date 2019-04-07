@@ -1,14 +1,18 @@
 package gui;
 
 import data.Account;
+import users.Doctor;
+import users.User;
 
 import javax.swing.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
+import java.util.HashMap;
 
+/**
+ * @author dylnstwrt
+ */
 public class AdminConsole {
     private JFrame frame = new JFrame("Admin Portal");
     private JTabbedPane tabbedPane1;
@@ -18,21 +22,26 @@ public class AdminConsole {
     private JPasswordField passwordField2;
     private JButton confirmButton;
     private JPanel createUser;
-    private JComboBox accountsBox;
     private JComboBox comboBox1;
-    private JFormattedTextField formattedTextField2;
-    private JFormattedTextField formattedTextField4;
-    private JFormattedTextField formattedTextField5;
-    private JPasswordField passwordField3;
-    private JTabbedPane tabbedPane2;
-    private JButton editButton;
+    private JTable accountsList;
+    private DefaultTableModel tableModel;
+    private static String[] columnNames = {
+      "Name, First","Name, Last","Role","Username","Department", "DOB"
+    };
 
+    /**
+     * constructor for adminConsole
+     * @todo refractor all classes for consistency
+     */
     public AdminConsole() {
         frame.setContentPane(content);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
+        /**
+         * Listener for  creating new account, implements input validation to make sure that user name password exist.
+         */
         confirmButton.addMouseListener(new MouseAdapter() {
             /**
              * {@inheritDoc}
@@ -51,13 +60,13 @@ public class AdminConsole {
                 } else {
                     String toDisplay = "Create account "+username+"?";
                     int choice = JOptionPane.showConfirmDialog(null, toDisplay);
-                        if (choice == 0) {
+                        if (choice == 0) { // CONFIRM
                             Account.createAccount(username,password,accountType);
                             JOptionPane.showMessageDialog(null, "Account Created");
                             formattedTextField1.setText(null);
                             passwordField1.setText(null);
                             passwordField2.setText(null);
-                        } else if (choice == 1) {
+                        } else if (choice == 1) { // REJECT AND CLEAR I.E. RESTART
                             formattedTextField1.setText(null);
                             passwordField1.setText(null);
                             passwordField2.setText(null);
@@ -65,6 +74,9 @@ public class AdminConsole {
                 }
             }
         });
+        /**
+         * listener for accounts tabbed pane
+         */
         tabbedPane1.addMouseListener(new MouseAdapter() {
             /**
              * {@inheritDoc}
@@ -74,34 +86,69 @@ public class AdminConsole {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                List<String> keys = Account.listUsernames();
-                for (String key : keys) {
-                    boolean alreadyInList = false;
-                   for (int i = 0; i < accountsBox.getItemCount(); i ++) {
-                       if (accountsBox.getItemAt(i) == key) {
-                           alreadyInList = true;
-                           break;
-                       }
-                   }
-                   if (!alreadyInList) {accountsBox.addItem(key);}
+                HashMap<String, User> dict = Account.getDictionary();
+                for (String s : Account.listUsernames()) {
+                    User toAdd = dict.get(s);
+                    boolean dupe = false;
+                    String accountType = "";
+                    String department = "";
+                    switch (toAdd.getAccountType()) {
+                        case 1:
+                            accountType = "Administrator";
+                            department = "Administration";
+                            break;
+                        case 2:
+                            accountType = "Doctor";
+                            Doctor acc = new Doctor(toAdd);
+                            department = acc.getDepartment();
+                            break;
+                        default:
+                            accountType = "Patient";
+                            department = "N/A";
+                    }
+                     Object[] toDisplay  = {toAdd.getFirstName(), toAdd.getLastName(),
+                             accountType, toAdd.getUsername(),department, toAdd.getBirthday()};
+                     for (int i = 0; i < tableModel.getRowCount(); i++) {
+                        if (s.equals(tableModel.getValueAt(i,3))) {
+                            dupe = true;
+                            break;
+                         }
+                     }
+                     if (!dupe) tableModel.addRow(toDisplay);
                 }
             }
         });
-        accountsBox.addItemListener(new ItemListener() {
-            /**
-             * Invoked when an item has been selected or deselected by the user.
-             * The code written for this method performs the operations
-             * that need to occur when an item is selected (or deselected).
-             *
-             * @param e the event to be processed
-             */
+        /**
+         * listener for doubleclick on a user to get their schedule or to edit their information.
+         */
+        accountsList.addMouseListener(new MouseAdapter() {
             @Override
-            public void itemStateChanged(ItemEvent e) {
-                String key = e.getItem().toString();
-                formattedTextField2.setText(key);
-                passwordField3.setText(Account.getDictionary().get(key).getPassword());
-                formattedTextField4.setText(Account.getDictionary().get(key).getFirstName());
-                formattedTextField5.setText(Account.getDictionary().get(key).getLastName());
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int option =
+                            JOptionPane.showOptionDialog(null, "Show schedule or edit?", "User Info",
+                                    JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"View", "Edit", "Cancel"}, null );
+                    System.out.println(option);
+                    switch (option) {
+                        // view schedule
+                        case 0:
+                            int row = accountsList.getSelectedRow();
+                            String username = accountsList.getValueAt(row, 3).toString();
+                            User acc = Account.getDictionary().get(username);
+                            ScheduleView view = new ScheduleView(acc);
+                            break;
+                        // edit information
+                        case 1:
+                            /*
+                            requires restart to show changes to info in the accounts page
+                             */
+                            int row1 = accountsList.getSelectedRow();
+                            String username1 = accountsList.getValueAt(row1, 3).toString();
+                            User acc2 = Account.getDictionary().get(username1);
+                            Info init = new Info(Account.getDictionary().get(acc2));
+                            init.init();
+                    }
+                }
             }
         });
     }
@@ -110,4 +157,18 @@ public class AdminConsole {
         frame.dispose();
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        tableModel = new DefaultTableModel(0,0){
+            private static final long serialVersionUID = 1L;
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            };
+        };
+        for (String s : columnNames) {
+            tableModel.addColumn(s);
+        }
+        accountsList = new JTable(tableModel);
+        accountsList.setDragEnabled(false);
+    }
 }

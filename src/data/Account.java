@@ -11,7 +11,7 @@ public class Account{
 
     // HashMap of all the accounts in the database. Maps a User object to a username.
     private static HashMap<String, User> accDictionary;
-    private static ArrayList<>
+    //private static ArrayList<>
 
 
     /**
@@ -63,12 +63,7 @@ public class Account{
                 break;
         }
         try {
-            FileOutputStream fileOut =
-                    new FileOutputStream("accounts.ser");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(accDictionary);
-            out.close();
-            fileOut.close();
+            writeToFile();
             System.out.println("\nAccount " + username + " is created and saved.\n");
         } catch (IOException i) {
             System.out.println("Could not successfully create/save accounts.ser.");
@@ -118,11 +113,60 @@ public class Account{
 
     /**
      * author @Dylan
-     * @return
+     * @return list of strings which represent the list of usernames in the dictionary
      */
     public static List<String> listUsernames() {
         return new ArrayList<>(getDictionary().keySet());
     }
 
+    /**
+     * method to write out the dictionary to the .ser file, should be called when wanting to save changes in the dictionary.
+     * @throws IOException
+     * @author Dylan
+     */
+    public static void writeToFile() throws IOException {
+        try {
+            FileOutputStream fileOut = new FileOutputStream("accounts.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(accDictionary);
+            out.close();
+            fileOut.close();
+            System.out.println("Changes made.");
+        } catch (IOException e) {
+            System.out.println("Issues making edits");
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList<User> getNames(int accType) {
+        ArrayList<User> users = new ArrayList<>();
+        switch (accType) {
+            case 1:
+                HashMap<String, User> dictionary = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary.entrySet()) {
+                    if (entry.getValue() instanceof Admin) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+            case 2:
+                HashMap<String, User> dictionary1 = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary1.entrySet()) {
+                    if (entry.getValue() instanceof Doctor) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+            case 3:
+                HashMap<String, User> dictionary2 = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary2.entrySet()) {
+                    if (entry.getValue() instanceof Patient) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+        }
+        return users;
+    }
 
 }

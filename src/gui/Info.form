@@ -61,8 +61,9 @@
             </constraints>
             <properties>
               <editable value="true"/>
+              <enabled value="true"/>
               <model>
-                <item value="1999"/>
+                <item value="2019"/>
               </model>
             </properties>
           </component>

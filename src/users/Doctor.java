@@ -24,7 +24,9 @@ public class Doctor extends User {
 	private int department = 1;				// 1. General Services department by default.
 
 
-	
+	public Doctor(User user) {
+	    super(user.getUsername(),user.getPassword(),user.getAccountType());
+    }
 	public Doctor(String username, String password){
 		super(username, password, 2); 	
 	}
@@ -172,9 +174,8 @@ public class Doctor extends User {
 	 * 
 	 * @return linked list object copy of the list of patients.
 	 */
-	public LinkedList<User> returnPatients() {
-		LinkedList<User> toReturn = new LinkedList<User>(this.patients);
-		return toReturn; 
+	public LinkedList<User> getPatients() {
+		return patients;
 	}
 
 	/**
@@ -211,5 +212,6 @@ public class Doctor extends User {
 		}
 		return "";
 	}
+
 }
 	
