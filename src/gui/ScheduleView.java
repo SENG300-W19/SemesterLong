@@ -130,15 +130,25 @@ public class ScheduleView {
     private void getSchedule(User user) {
 
         for (Appointment a : user.getSchedule().list) {
+            if (!a.isRequest()) {
                 Object[] toAdd = {
                         a.getStart().toLocalDate().toString(),
                         a.getStart().toLocalTime().toString(),
                         a.getFinish().toLocalTime().toString(),
                         a.getApptPatient().getLastName() + ", " +
-                        a.getApptPatient().getFirstName()
+                                a.getApptPatient().getFirstName()
 
                 };
                 model.addRow(toAdd);
+            } else {
+                Object[] toAdd = {
+                        a.getStart().toLocalDate().toString(),
+                        a.getStart().toLocalTime().toString(),
+                        a.getFinish().toLocalTime().toString(),
+                        "Time Off Request"
+                };
+                model.addRow(toAdd);
+            }
         }
 
     }
