@@ -1,5 +1,7 @@
 package data;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import users.Admin;
@@ -44,30 +46,44 @@ public class Account{
      * @param password
      * @param accountType 1 - admin, 2 - doctor, 3 patient.
      */
-    public static void createAccount(String username, String password, int accountType) {
-        switch (accountType) {
-            case 1:
-                Admin admin = new Admin(username, password);
-                admin.setInfo(admin);
-                accDictionary.put(username, admin);
-                break;
-            case 2:
-                Doctor doctor = new Doctor(username, password);
-                doctor.setInfo(doctor);
-                accDictionary.put(username, doctor);
-                break;
-            case 3:
-                Patient acc = new Patient(username, password);
-                acc.setInfo(acc);
-                accDictionary.put(username, acc);
-                break;
-        }
-        try {
-            writeToFile();
-            System.out.println("\nAccount " + username + " is created and saved.\n");
-        } catch (IOException i) {
-            System.out.println("Could not successfully create/save accounts.ser.");
-            i.printStackTrace();
+    public static void createAccount(String username, String password, int accountType) throws Exception {
+        username = username.toLowerCase();
+        boolean exists = accDictionary.containsKey(username);
+        if (!exists) {
+            switch (accountType) {
+                case 1:
+                    Admin admin = new Admin(username, password);
+                    if (username.equals("admin")) {
+                        admin.setFirstName("Administration");
+                        admin.setLastName("Initialized");
+                        LocalDate now = LocalDate.of(LocalDate.now().getYear(),
+                                LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth());
+                        admin.setBirthday(now);
+                    } else {
+                        admin.setInfo(admin);
+                    }
+                    accDictionary.put(username, admin);
+                    break;
+                case 2:
+                    Doctor doctor = new Doctor(username, password);
+                    doctor.setInfo(doctor);
+                    accDictionary.put(username, doctor);
+                    break;
+                case 3:
+                    Patient acc = new Patient(username, password);
+                    acc.setInfo(acc);
+                    accDictionary.put(username, acc);
+                    break;
+            }
+            try {
+                writeToFile();
+                System.out.println("\nAccount " + username + " is created and saved.\n");
+            } catch (IOException i) {
+                System.out.println("Could not successfully create/save accounts.ser.");
+                i.printStackTrace();
+            }
+        } else {
+            throw new Exception("Username already exists");
         }
     }
 
@@ -78,6 +94,7 @@ public class Account{
      * @return 0 if username/password is incorrect, and 1-3 if users exists for the account type
      */
     public static User login(String username, String password) {
+        username = username.toLowerCase();
         boolean exists = accDictionary.containsKey(username);
         if (!exists) {
             return null;
@@ -137,4 +154,36 @@ public class Account{
             e.printStackTrace();
         }
     }
+
+    public static ArrayList<User> getNames(int accType) {
+        ArrayList<User> users = new ArrayList<>();
+        switch (accType) {
+            case 1:
+                HashMap<String, User> dictionary = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary.entrySet()) {
+                    if (entry.getValue() instanceof Admin) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+            case 2:
+                HashMap<String, User> dictionary1 = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary1.entrySet()) {
+                    if (entry.getValue() instanceof Doctor) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+            case 3:
+                HashMap<String, User> dictionary2 = Account.getDictionary();
+                for (Map.Entry<String, User> entry : dictionary2.entrySet()) {
+                    if (entry.getValue() instanceof Patient) {
+                        users.add(entry.getValue());
+                    }
+                }
+                break;
+        }
+        return users;
+    }
+
 }

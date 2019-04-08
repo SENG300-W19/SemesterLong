@@ -7,10 +7,12 @@ import gui.Login;
 import gui.Menu;
 import users.*;
 
+import javax.swing.*;
 import java.io.*;
 
 public class ManagementSystem implements Serializable {
 
+    private static JPanel outer;
     @SuppressWarnings("unchecked")
 	public static void main(String[] args) {
         Login log = new Login();
@@ -31,7 +33,13 @@ public class ManagementSystem implements Serializable {
             System.out.println("accounts.ser not found.\nCreating a new account dictionary...");
             accDictionary = new HashMap<String, User>();
             Account.setDictionary(accDictionary);
-            Account.createAccount("admin", "123", 1);
+            try {
+                Account.createAccount("admin", "123", 1);
+                JOptionPane.showMessageDialog(outer, "Please log in with username: admin, password: 123");
+            } catch (Exception e) {
+                System.out.println("Oops, this shouldn't be happening. Try deleting the accounts.ser file or restarting the program.");
+                JOptionPane.showMessageDialog(outer, "Oops, this shouldn't be happening. Try deleting the accounts.ser file or restarting the program.");
+            }
         } catch (ClassNotFoundException c) {
             System.out.println("Accounts class not found.\nExiting program.");
             c.printStackTrace();
