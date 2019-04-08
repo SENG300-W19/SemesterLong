@@ -19,6 +19,7 @@ public class PatientConsole {
     private JButton signOutButton;
     private JTable table1;
     private JTable table2;
+    private JButton addButton;
     private static DefaultTableModel scheduleModel = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -45,7 +46,7 @@ public class PatientConsole {
         $$$setupUI$$$();
         scheduleModel.setColumnIdentifiers(title);
         table1.setModel(scheduleModel);
-//        table2.setModel(doctorsModel);
+        table2.setModel(doctorsModel);
         init();
         signOutButton.addActionListener(new ActionListener() {
             @Override
@@ -79,6 +80,14 @@ public class PatientConsole {
                 }
             }
         });
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == addButton) {
+                    DateSelect select = new DateSelect(acc.getSchedule());
+                }
+            }
+        });
     }
 
     private void init() {
@@ -103,6 +112,8 @@ public class PatientConsole {
                         app.getFinish().toLocalTime().toString(), app.getApptDoctor().toString(), !app.isRequest()
                 };
                 scheduleModel.addRow(rowData);
+                Patient patient = new Patient(acc);
+                patient.addDoctor(app.getApptDoctor());
             }
         }
 
@@ -147,11 +158,21 @@ public class PatientConsole {
         table1 = new JTable();
         scrollPane1.setViewportView(table1);
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel2.add(panel3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         signOutButton = new JButton();
         signOutButton.setText("Sign Out");
-        panel3.add(signOutButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel3.add(signOutButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        addButton = new JButton();
+        addButton.setText("Add");
+        panel3.add(addButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        tabbedPane1.addTab("Doctors", panel4);
+        final JScrollPane scrollPane2 = new JScrollPane();
+        panel4.add(scrollPane2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        table2 = new JTable();
+        scrollPane2.setViewportView(table2);
     }
 
     /**
