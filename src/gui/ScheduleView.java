@@ -10,10 +10,10 @@ import users.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 
 /**
  * @author dylnstwrt
@@ -36,25 +36,48 @@ public class ScheduleView {
             "September", "October", "November", "December"
     };
 
-    private static ArrayList<Appointment> sharedAppt;
+    private static Schedule schedule;
     /**
      * constructor for ScheduleView Class
      * @todo create monthly view class, which calls this class for a given day
      * @param user
      */
     public ScheduleView(User user) {
+        this.user = user;
+        schedule = user.getSchedule();
         getSchedule(user);
         frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
+        ScheduleView view = this;
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to close the window?",
+                        "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                    frame.dispose();
+                }
+            }
+        };
+        frame.addWindowListener(exitListener);
+
         addButton1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                     try {
-                        DateSelect getDate = new DateSelect(user.getSchedule(), user);
+                        DateSelect getDate = new DateSelect(user.getSchedule(), user, view);
                         Account.writeToFile();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(null, "Issue with date");
@@ -66,60 +89,21 @@ public class ScheduleView {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-            }
-        });
-    }
-
-    public ScheduleView(Doctor doctor, Patient patient) {
-        getDoctorPatientAppt(doctor, patient);
-        frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.pack();
-        frame.setVisible(true);
-        addButton1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                try {
-                    DateSelect getDate = new DateSelect(user.getSchedule());
-                    Account.writeToFile();
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Issue with date");
-                    e1.printStackTrace();
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to remove the appointment?",
+                        "Remove Appointment", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    int apptIndex = appointmentList.getSelectedRow();
+                    Appointment appt = schedule.list.get(apptIndex);
+                    Doctor doctor = appt.getApptDoctor();
+                    Patient patient = appt.getApptPatient();
+                    doctor.getSchedule().removeAppointment(appt);
+                    patient.getSchedule().removeAppointment(appt);
+                    refreshScheduleView();
                 }
             }
         });
-        removeButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                int apptIndex = appointmentList.getSelectedRow();
-                System.out.println("Selected row: " + apptIndex);
-                Appointment appt = sharedAppt.get(apptIndex);
-                doctor.getSchedule().removeAppointment(appt);
-                patient.getSchedule().removeAppointment(appt);
-                getDoctorPatientAppt(doctor, patient);
-                appointmentList.repaint();
-            }
-        });
-    }
-
-
-
-
-    private void getDoctorPatientAppt(Doctor doctor, Patient patient) {
-        for (Appointment a : patient.getSchedule().list) {
-            for (Appointment b : doctor.getSchedule().list) {
-                if (a.equals(b)) {
-                    sharedAppt.add(a);
-                    Object[] toAdd = {a.getStart().toLocalDate().toString(), a.getStart().toLocalTime().toString(), a.getFinish().toLocalTime().toString(),
-                    };
-                    model.addRow(toAdd);
-                }
-            }
-        }
-
     }
 
     /**
@@ -145,7 +129,7 @@ public class ScheduleView {
                         a.getStart().toLocalDate().toString(),
                         a.getStart().toLocalTime().toString(),
                         a.getFinish().toLocalTime().toString(),
-                        "Time Off Request"
+                        a.getRequestStatus()
                 };
                 model.addRow(toAdd);
             }
@@ -157,10 +141,19 @@ public class ScheduleView {
      * initialize columns for list of appointments
      */
     private void createUIComponents() {
+        System.out.println("Creating UI components");
         model = new DefaultTableModel(0,0);
         for (String s : title) {
             model.addColumn(s);
         }
         appointmentList = new JTable(model);
+    }
+
+    /**
+     * Refresh Schedule View
+     */
+    public void refreshScheduleView() {
+        model.setRowCount(0);
+        getSchedule(user);
     }
 }

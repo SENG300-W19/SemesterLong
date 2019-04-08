@@ -96,6 +96,7 @@ public class Schedule implements Serializable {
      * @param appointment gets added to Admin.requests Schedule
      */
 	public void addRequests(Appointment appointment) {
+	    System.out.println("Adding request");
         list.add(appointment);
         sortSchedule();
     }
@@ -106,10 +107,12 @@ public class Schedule implements Serializable {
 	public void removeAppointment(Appointment appointment) {
 		for (int i = 0; i < list.size(); i++) {
 		    if (list.get(i).equals(appointment)) {
+		        System.out.println("appointment removed");
 		        list.remove(i);
 		        break;
             }
         }
+        System.out.println("after for");
         sortSchedule();
 	}
 

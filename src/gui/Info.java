@@ -2,8 +2,7 @@ package gui;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.time.LocalDate;
@@ -35,6 +34,25 @@ public class Info {
 
     public Info(User user) {
         init();
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to close the window?",
+                        "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                    frame.dispose();
+                }
+            }
+        };
+        frame.addWindowListener(exitListener);
         confirmButton.addMouseListener(new MouseAdapter() {
             /**
              * {@inheritDoc}
@@ -82,9 +100,78 @@ public class Info {
         });
     }
 
+    public Info(User user, DoctorConsole console) {
+        init();
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to close the window?",
+                        "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                    frame.dispose();
+                }
+            }
+        };
+        frame.addWindowListener(exitListener);
+        confirmButton.addMouseListener(new MouseAdapter() {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                int option = JOptionPane.showConfirmDialog(null,"Proceed with changes?");
+                switch(option) {
+                    case 0:
+                        System.out.println("YES");//YES
+                        setFirstName(user);
+                        setLastName(user);
+                        setBirthday(user);
+                        try {
+                            Account.writeToFile();
+                        } catch (IOException i) {
+                            JOptionPane.showMessageDialog(null, "Unable to write to file");
+                        }
+                        JOptionPane.showMessageDialog(null, "Changes Saved");
+                        console.refreshDoctorConsole();
+                        frame.dispose();
+                        break;
+                    case 1: //NO
+                        JOptionPane.showMessageDialog(null, "No changes saved");
+                        frame.dispose();
+                        break;
+                    case 2: //CANCEL
+                        break;
+                }
+            }
+        });
+        cancelButton.addMouseListener(new MouseAdapter() {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                close();
+            }
+        });
+    }
+
     public void init() {
         frame.setContentPane(content);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);

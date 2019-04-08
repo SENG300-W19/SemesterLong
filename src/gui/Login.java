@@ -5,8 +5,7 @@ import users.Doctor;
 import users.User;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,6 +34,25 @@ public class Login {
          * If accounts.ser already exists, will try to login with the selected credentials.
          * Then opens the corresponding GUI class for their terminal.
          */
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to close the application?",
+                        "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                    System.exit(0);
+                }
+            }
+        };
+        frame.addWindowListener(exitListener);
         CONFIRMButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {

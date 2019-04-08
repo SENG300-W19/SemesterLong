@@ -1,13 +1,14 @@
 package gui;
 
 import data.Account;
+import data.Appointment;
+import users.Admin;
 import users.Doctor;
 import users.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.HashMap;
 
 /**
@@ -25,6 +26,11 @@ public class AdminConsole {
     private JComboBox comboBox1;
     private JTable accountsList;
     private DefaultTableModel tableModel;
+   // private DefaultTableModel requestModel;
+
+    private final static String[] title = new String[]{
+            "Date", "Start", "Finish", "User"
+    };
     private static String[] columnNames = {
       "Name, First","Name, Last","Role","Username","Department", "DOB"
     };
@@ -34,11 +40,32 @@ public class AdminConsole {
      * @todo refractor all classes for consistency
      */
     public AdminConsole() {
+        //getRequests();
         frame.setContentPane(content);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
+
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to close the application?",
+                        "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                    System.exit(0);
+                }
+            }
+        };
+        frame.addWindowListener(exitListener);
         /**
          * Listener for  creating new account, implements input validation to make sure that user name password exist.
          */
@@ -151,11 +178,85 @@ public class AdminConsole {
                 }
             }
         });
+        /*
+        acceptButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to accept the request?",
+                        "Accept Request", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        int requestIndex = requestTable.getSelectedRow();
+                        Appointment request = Admin.getRequests().list.get(requestIndex);
+                        request.setRequestStatus("Time Off Accepted");
+                        Admin.getRequests().removeAppointment(request);
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                }
+                refreshAdminConsole();
+            }
+        });
+        declineButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to decline the request?",
+                        "Decline Request", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        int requestIndex = requestTable.getSelectedRow();
+                        Appointment request = Admin.getRequests().list.get(requestIndex);
+                        Doctor doctor = request.getApptDoctor();
+                        doctor.getSchedule().removeAppointment(request);
+                        Admin.getRequests().removeAppointment(request);
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                }
+                refreshAdminConsole();
+            }
+        });*/
     }
 
     public void close() {
         frame.dispose();
     }
+
+    private void displayTable() {
+
+    }
+/*
+    private void getRequests() {
+        Admin.getRequests().sortSchedule();
+        if (Admin.getRequests().list.isEmpty()) {
+            System.out.println("it's empty");
+        }
+        for (Appointment a : Admin.getRequests().list) {
+            if (a.isRequest()) {
+                System.out.println("is request");
+                Object[] toAdd = {
+                        a.getStart().toLocalDate().toString(),
+                        a.getStart().toLocalTime().toString(),
+                        a.getFinish().toLocalTime().toString(),
+                        a.getApptDoctor().getLastName() + ", " +
+                                a.getApptDoctor().getFirstName()
+
+                };
+                requestModel.addRow(toAdd);
+            }
+        }
+    }
+*/
+
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
@@ -170,5 +271,18 @@ public class AdminConsole {
         }
         accountsList = new JTable(tableModel);
         accountsList.setDragEnabled(false);
+        /*
+        requestModel = new DefaultTableModel(0,0);
+        for (String s : title) {
+            requestModel.addColumn(s);
+        }
+        requestTable = new JTable(requestModel);
+        */
     }
+    /*
+    public void refreshAdminConsole() {
+        requestModel.setRowCount(0);
+        getRequests();
+    }
+    */
 }

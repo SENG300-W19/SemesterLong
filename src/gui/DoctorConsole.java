@@ -18,13 +18,14 @@ public class DoctorConsole {
     private JScrollPane scrollPanel;
     private JTable appointmentTable;
     private JButton signOutButton;
-    private JButton requestButton;
+    //private JButton requestButton;
     private JFrame frame = new JFrame("Doctor Console");
     private DefaultTableModel model;
     private DefaultTableModel model2;
     private final static String[] names = {"Last", "First"};
     private final static String[] appts = {"Date", "Start", "Finish", "Patient"};
     private LinkedList<User> linkedPatientList;
+    private Doctor docUser;
 
 
     /**
@@ -32,6 +33,7 @@ public class DoctorConsole {
      * @param doctor
      */
     public DoctorConsole(Doctor doctor) {
+        docUser = doctor;
         linkedPatientList = doctor.getPatients();
         displayPatients(linkedPatientList);
         displayAppointments(doctor);
@@ -40,7 +42,7 @@ public class DoctorConsole {
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
-
+        DoctorConsole console = this;
         WindowListener exitListener = new WindowAdapter() {
 
             @Override
@@ -69,7 +71,7 @@ public class DoctorConsole {
                     int row = patientList.rowAtPoint(e.getPoint());
                     Patient patient = (Patient) linkedPatientList.get(row);
                     System.out.println(patient.getFirstName());
-                    Info infoView = new Info(patient);
+                    Info infoView = new Info(patient, console);
                     e.consume();
                 }
             }
@@ -89,14 +91,14 @@ public class DoctorConsole {
                 }
             }
         });
-        DoctorConsole console = this;
+        /*
         requestButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                DateSelect request = new DateSelect(doctor);
+                DateSelect request = new DateSelect(doctor, console);
             }
-        });
+        });*/
     }
 
     /**
@@ -133,7 +135,7 @@ public class DoctorConsole {
                         a.getStart().toLocalDate().toString(),
                         a.getStart().toLocalTime().toString(),
                         a.getFinish().toLocalTime().toString(),
-                        "Time Off Request"
+                        a.getRequestStatus()
                 };
                 model2.addRow(toAdd);
             }
@@ -163,6 +165,16 @@ public class DoctorConsole {
                 return false;
             }
         };
+    }
 
+    /**
+     * Refresh doctor console
+     */
+    public void refreshDoctorConsole() {
+        model.setRowCount(0);
+        model2.setRowCount(0);
+        linkedPatientList = docUser.getPatients();
+        displayPatients(linkedPatientList);
+        displayAppointments(docUser);
     }
 }

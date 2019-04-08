@@ -10,8 +10,7 @@ import users.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.Console;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,10 +40,30 @@ public class DateSelect {
 
     public DateSelect(Schedule schedule) {
         frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
+
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to close the window?",
+                        "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                    frame.dispose();
+                }
+            }
+        };
+        frame.addWindowListener(exitListener);
 
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -73,7 +92,7 @@ public class DateSelect {
      * @param schedule of the user
      * @param user account
      */
-    public DateSelect(Schedule schedule, User user) {
+    public DateSelect(Schedule schedule, User user, ScheduleView view) {
         setNameBox(user);
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -115,6 +134,7 @@ public class DateSelect {
                             other.addAppt(appointment);
                             addPatient((Doctor) user, patient);
                             addDoctor(patient, (Doctor) user);
+                            view.refreshScheduleView();
                         }
                         JOptionPane.showMessageDialog(null, "Appointment Added");
                         Account.writeToFile();
@@ -130,7 +150,7 @@ public class DateSelect {
      * Date select constructor for opening DateSelect for requesting time off
      * @param doctor
      */
-    public DateSelect(Doctor doctor) {
+    public DateSelect(Doctor doctor, DoctorConsole console) {
         setRequestBox();
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -155,6 +175,7 @@ public class DateSelect {
                         Admin.getRequests().addRequests(appointment);
                         JOptionPane.showMessageDialog(null, "Request Made.");
                         Account.writeToFile();
+                        console.refreshDoctorConsole();
                     } catch (Exception e2) {
                         JOptionPane.showMessageDialog(null, e2.getMessage());
                     }
