@@ -56,6 +56,7 @@ public class Appointment implements Serializable{
 	private Doctor doctor;
 
 	private boolean isRequest = false;
+	private String requestStatus;
 
 	
 	/**
@@ -128,11 +129,21 @@ public class Appointment implements Serializable{
             this.finish = finish;
             this.doctor = doctor;
             isRequest = true;
+            requestStatus = "Time Off Request";
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
+    public String getRequestStatus() {
+    	String copy = requestStatus;
+    	return copy;
+	}
+
+    public void setRequestStatus(String status) {
+    	requestStatus = status;
+	}
 	
 	/**
 	 * Check to see that the patient and doctor are assigned to each other before creating
