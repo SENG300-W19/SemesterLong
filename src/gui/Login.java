@@ -137,10 +137,11 @@ public class Login {
      * Open the login menu
      * @param args
      */
+    /*
     public static void main(String[] args) {
         Login log = new Login();
         log.init();
     }
-
+*/
 }
 
