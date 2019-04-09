@@ -12,7 +12,7 @@ public class User implements Serializable {
 
 
 	private static final long serialVersionUID = 1L;
-	private String firstName;
+	private String firstName = "FirstName";
 
     /**
      * Get the first name of the user
@@ -22,7 +22,7 @@ public class User implements Serializable {
 		return firstName;
 	}
 
-    private LocalDate birthday;
+    private LocalDate birthday = LocalDate.of(Integer.parseInt("2019"), Integer.parseInt("1"), Integer.parseInt("1"));
 
     /**
      * Set the birthday of the user
@@ -73,7 +73,7 @@ public class User implements Serializable {
     }
 
 
-    private String lastName;
+    private String lastName = "LastName";
     private String username;
     private String password;
     private Schedule schedule = new Schedule();
@@ -110,7 +110,6 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.accountType = accountType;
-        birthday = LocalDate.of(Integer.parseInt("2019"), Integer.parseInt("1"), Integer.parseInt("1"));
     }
 
     /**
@@ -171,7 +170,6 @@ public class User implements Serializable {
      */
     public void setInfo(User user) {
         Info form = new Info(user);
-        form.init();
     }
 
 }

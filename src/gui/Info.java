@@ -46,6 +46,7 @@ public class Info {
      * @param user is the user info being edited
      */
     public Info(User user) {
+        init();
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height;
         int width = screenSize.width;
@@ -68,7 +69,7 @@ public class Info {
             firstNameFormattedTextField.setText(user.getFirstName());
         }
         if (user.getLastName() == null) {
-            firstNameFormattedTextField.setText("LastName");
+            lastNameFormattedTextField.setText("LastName");
         } else {
             lastNameFormattedTextField.setText(user.getLastName());
         }
@@ -176,7 +177,7 @@ public class Info {
             firstNameFormattedTextField.setText(user.getFirstName());
         }
         if (user.getLastName().equals("")) {
-            firstNameFormattedTextField.setText("LastName");
+            lastNameFormattedTextField.setText("LastName");
         } else {
             lastNameFormattedTextField.setText(user.getLastName());
         }
@@ -283,7 +284,7 @@ public class Info {
             firstNameFormattedTextField.setText(user.getFirstName());
         }
         if (user.getLastName().equals("")) {
-            firstNameFormattedTextField.setText("LastName");
+            lastNameFormattedTextField.setText("LastName");
         } else {
             lastNameFormattedTextField.setText(user.getLastName());
         }
@@ -385,9 +386,11 @@ public class Info {
      */
     private void setFirstName(User user) {
         String text = firstNameFormattedTextField.getText();
-        //if (!text.equals("") && !text.equals("FirstName")) {
-        user.setFirstName(text);
-        //}
+        if (text.equals("")) {
+            user.setFirstName("FirstName");
+        } else {
+            user.setFirstName(text);
+        }
     }
 
     /**
@@ -396,9 +399,11 @@ public class Info {
      */
     private void setLastName(User user) {
         String text = lastNameFormattedTextField.getText();
-        //if (!text.equals("") && !text.equals("LastName")) {
-        user.setLastName(text);
-        //}
+        if (text.equals("")) {
+            user.setLastName("LastName");
+        } else {
+            user.setLastName(text);
+        }
     }
 
 

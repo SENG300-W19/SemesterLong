@@ -122,7 +122,7 @@ public class PatientConsole {
     private void displayDoctors(LinkedList<User> doctors) {
         for (User doctor : doctors) {
             Object[] toAdd = {
-                    doctor.getLastName(), doctor.getFirstName(), ((Doctor) doctor).getDepartment()
+                    doctor.getLastName(), doctor.getFirstName(), ((Doctor) doctor).getDepartmentGUI()
             };
             model.addRow(toAdd);
         }

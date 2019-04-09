@@ -133,22 +133,40 @@ public class AdminConsole {
                         case 1:
                             accountType = "Administrator";
                             String department = "Administration";
-                            Object[] toDisplay = {user.getFirstName(), user.getLastName(),
-                                    accountType, user.getUsername(), department, user.getBirthday()};
-                            tableModel.addRow(toDisplay);
+                            try {
+                                Object[] toDisplay = {user.getFirstName(), user.getLastName(),
+                                        accountType, user.getUsername(), department, user.getBirthday()};
+                                tableModel.addRow(toDisplay);
+                            } catch (Exception e1) {
+                                Object[] toDisplay = {user.getFirstName(), user.getLastName(),
+                                        accountType, user.getUsername(), department, "2019-01-01"};
+                                tableModel.addRow(toDisplay);
+                            }
                             break;
                         case 2:
                             accountType = "Doctor";
-                            Object[] toDisplay2 = {user.getFirstName(), user.getLastName(),
-                                    accountType, user.getUsername(), ((Doctor) user).getDepartmentGUI(), user.getBirthday()};
-                            tableModel.addRow(toDisplay2);
+                            try {
+                                Object[] toDisplay2 = {user.getFirstName(), user.getLastName(),
+                                        accountType, user.getUsername(), ((Doctor) user).getDepartmentGUI(), user.getBirthday()};
+                                tableModel.addRow(toDisplay2);
+                            } catch (Exception e2) {
+                                Object[] toDisplay2 = {user.getFirstName(), user.getLastName(),
+                                        accountType, user.getUsername(), ((Doctor) user).getDepartmentGUI(), "2019-01-01"};
+                                tableModel.addRow(toDisplay2);
+                            }
                             break;
                         case 3:
                             accountType = "Patient";
                             String department3 = "N/A";
-                            Object[] toDisplay3 = {user.getFirstName(), user.getLastName(),
-                                    accountType, user.getUsername(), department3, user.getBirthday()};
-                            tableModel.addRow(toDisplay3);
+                            try {
+                                Object[] toDisplay3 = {user.getFirstName(), user.getLastName(),
+                                        accountType, user.getUsername(), department3, user.getBirthday()};
+                                tableModel.addRow(toDisplay3);
+                            } catch (Exception e3) {
+                                Object[] toDisplay3 = {user.getFirstName(), user.getLastName(),
+                                        accountType, user.getUsername(), department3, "2019-01-01"};
+                                tableModel.addRow(toDisplay3);
+                            }
                             break;
                     }
                 }
