@@ -3,20 +3,15 @@ package users;
 import data.Account;
 import data.Appointment;
 import data.Schedule;
-import exceptions.ScheduleException;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
 
 /**
- * 
- * @author dylnstwrt
- * not used, refactor is required
+ * This class is for the functionality of an admin account.
  */
 public class Admin extends User{
 	/**
@@ -179,7 +174,7 @@ public class Admin extends User{
 							System.out.println("Enter minute");
 							int min = scan.nextInt();
 							Appointment add_app = new Appointment(day, month, year, hour, min);
-							acc.getSchedule().addAppointment(add_app);
+							acc.getSchedule().addAppt(add_app);
 							Account.writeToFile();
 						} catch (Exception e) {
 							e.printStackTrace();

@@ -22,20 +22,48 @@ public class Info {
     private JComboBox dayBox;
     private JComboBox monthBox;
     private JFrame frame = new JFrame("Info");
-    ;
+
+    private final static String[] months = new String[]{
+            "January", "February", "March", "April", "May", "June", "July", "August",
+            "September", "October", "November", "December"
+    };
+
+    private static final String[] departments = {"General Services", "Cardiology", "Nephrology", "Neurology",
+            "Psychiatry", "Oncology", "Gastroenterology", "Haemotology", "Orthopaedics"};
+
     private JPanel content;
     private JButton cancelButton;
     private JButton confirmButton;
+    private JLabel departmentLabel;
+    private JComboBox departmentBox;
     private String firstName;
     private String lastName;
     private LocalDate birthday;
-    private Boolean complete = false;
 
-    public Boolean isComplete() {
-        return ((firstName != null) && (lastName != null) && (birthday != null));
-    }
 
+    /**
+     * Constructor to edit a user's info
+     * @param user is the user info being edited
+     */
     public Info(User user) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = screenSize.height;
+        int width = screenSize.width;
+        frame.setSize(width / 2, height / 2);
+        if (user instanceof Patient || user instanceof Admin) {
+            departmentLabel.setVisible(false);
+            departmentBox.setVisible(false);
+        }
+        birthday = user.getBirthdayDate();
+        if (birthday != null) {
+            firstNameFormattedTextField.setText(user.getFirstName());
+            lastNameFormattedTextField.setText(user.getLastName());
+            int day = birthday.getDayOfMonth();
+            dayBox.setSelectedIndex(day - 1);
+            int month = birthday.getMonthValue();
+            monthBox.setSelectedItem(months[month - 1]);
+            yearBox.setSelectedItem(birthday.getYear());
+        }
         init();
         WindowListener exitListener = new WindowAdapter() {
 
@@ -68,17 +96,25 @@ public class Info {
                 int option = JOptionPane.showConfirmDialog(null, "Proceed with changes?");
                 switch (option) {
                     case 0:
-                        System.out.println("YES");//YES
-                        setFirstName(user);
-                        setLastName(user);
-                        setBirthday(user);
                         try {
-                            Account.writeToFile();
-                        } catch (IOException i) {
-                            JOptionPane.showMessageDialog(null, "Unable to write to file");
+                            setBirthday(user);
+                            setFirstName(user);
+                            setLastName(user);
+
+                            if (user instanceof Doctor) {
+                                int index = departmentBox.getSelectedIndex();
+                                ((Doctor) user).setDepartmentGUI(departments[index]);
+                            }
+                            try {
+                                Account.writeToFile();
+                            } catch (IOException i) {
+                                JOptionPane.showMessageDialog(null, "Unable to write to file");
+                            }
+                            JOptionPane.showMessageDialog(null, "Changes Saved");
+                            frame.dispose();
+                        } catch (Exception e2) {
+                            JOptionPane.showMessageDialog(null, e2.getMessage());
                         }
-                        JOptionPane.showMessageDialog(null, "Changes Saved");
-                        frame.dispose();
                         break;
                     case 1: //NO
                         JOptionPane.showMessageDialog(null, "No changes saved");
@@ -103,7 +139,128 @@ public class Info {
         });
     }
 
+    /**
+     * Constructor to edit a user's info from the Admin Console
+     * @param user is the user info being edited
+     */
+    public Info(User user, AdminConsole console) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = screenSize.height;
+        int width = screenSize.width;
+        frame.setSize(width / 2, height / 2);
+        if (user instanceof Patient || user instanceof Admin) {
+            departmentLabel.setVisible(false);
+            departmentBox.setVisible(false);
+        } else {
+            departmentBox.setSelectedItem(((Doctor) user).getDepartmentGUI());
+        }
+        birthday = user.getBirthdayDate();
+        if (birthday != null) {
+            firstNameFormattedTextField.setText(user.getFirstName());
+            lastNameFormattedTextField.setText(user.getLastName());
+            int day = birthday.getDayOfMonth();
+            dayBox.setSelectedIndex(day - 1);
+            int month = birthday.getMonthValue();
+            monthBox.setSelectedItem(months[month - 1]);
+            yearBox.setSelectedItem(birthday.getYear());
+        }
+        init();
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = JOptionPane.showOptionDialog(
+                        null, "Are you sure that you want to close the window?",
+                        "Exit Confirmation", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (confirm == 0) {
+                    try {
+                        Account.writeToFile();
+                    } catch (Exception e3) {
+                        JOptionPane.showMessageDialog(null, "Could not save to file");
+                    }
+                    frame.dispose();
+                }
+            }
+        };
+        frame.addWindowListener(exitListener);
+        confirmButton.addMouseListener(new MouseAdapter() {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                int option = JOptionPane.showConfirmDialog(null, "Proceed with changes?");
+                switch (option) {
+                    case 0:
+                        try {
+                            setBirthday(user);
+                            setFirstName(user);
+                            setLastName(user);
+
+                            if (user instanceof Doctor) {
+                                int index = departmentBox.getSelectedIndex();
+                                ((Doctor) user).setDepartmentGUI(departments[index]);
+                            }
+                            try {
+                                Account.writeToFile();
+                            } catch (IOException i) {
+                                JOptionPane.showMessageDialog(null, "Unable to write to file");
+                            }
+                            JOptionPane.showMessageDialog(null, "Changes Saved");
+                            console.refreshAdminConsole();
+                            frame.dispose();
+                        } catch (Exception e2) {
+                            JOptionPane.showMessageDialog(null, e2.getMessage());
+                        }
+                        break;
+                    case 1: //NO
+                        JOptionPane.showMessageDialog(null, "No changes saved");
+                        frame.dispose();
+                        break;
+                    case 2: //CANCEL
+                        break;
+                }
+            }
+        });
+        cancelButton.addMouseListener(new MouseAdapter() {
+            /**
+             * {@inheritDoc}
+             *
+             * @param e
+             */
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                close();
+            }
+        });
+    }
+
+    /**
+     * Constructor to edit a user's info from the Doctor's console
+     * @param user is the user info being edited
+     */
     public Info(User user, DoctorConsole console) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = screenSize.height;
+        int width = screenSize.width;
+        frame.setSize(width / 2, height / 2);
+        departmentLabel.setVisible(false);
+        departmentBox.setVisible(false);
+        birthday = user.getBirthdayDate();
+        if (birthday != null) {
+            firstNameFormattedTextField.setText(user.getFirstName());
+            lastNameFormattedTextField.setText(user.getLastName());
+            int day = birthday.getDayOfMonth();
+            dayBox.setSelectedIndex(day - 1);
+            int month = birthday.getMonthValue();
+            monthBox.setSelectedItem(months[month - 1]);
+            yearBox.setSelectedItem(birthday.getYear());
+        }
         init();
         WindowListener exitListener = new WindowAdapter() {
 
@@ -136,18 +293,21 @@ public class Info {
                 int option = JOptionPane.showConfirmDialog(null, "Proceed with changes?");
                 switch (option) {
                     case 0:
-                        System.out.println("YES");//YES
-                        setFirstName(user);
-                        setLastName(user);
-                        setBirthday(user);
                         try {
-                            Account.writeToFile();
-                        } catch (IOException i) {
-                            JOptionPane.showMessageDialog(null, "Unable to write to file");
+                            setBirthday(user);
+                            setFirstName(user);
+                            setLastName(user);
+                            try {
+                                Account.writeToFile();
+                            } catch (IOException i) {
+                                JOptionPane.showMessageDialog(null, "Unable to write to file");
+                            }
+                            JOptionPane.showMessageDialog(null, "Changes Saved");
+                            console.refreshDoctorConsole();
+                            frame.dispose();
+                        } catch (Exception e2) {
+                            JOptionPane.showMessageDialog(null, e2.getMessage());
                         }
-                        JOptionPane.showMessageDialog(null, "Changes Saved");
-                        console.refreshDoctorConsole();
-                        frame.dispose();
                         break;
                     case 1: //NO
                         JOptionPane.showMessageDialog(null, "No changes saved");
@@ -172,6 +332,10 @@ public class Info {
         });
     }
 
+
+    /**
+     * Initialize the frame
+     */
     public void init() {
         frame.setContentPane(content);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -180,157 +344,75 @@ public class Info {
         frame.setVisible(true);
     }
 
+    /**
+     * Close the window
+     */
     public void close() {
         frame.dispose();
     }
 
+    /**
+     * Set first name of user
+     * @param user is the user's name being changed
+     */
     private void setFirstName(User user) {
-        user.setFirstName(firstNameFormattedTextField.getText());
-    }
-
-    public String getFirstName() {
-        return this.firstName;
-    }
-
-    private void setLastName(User user) {
-        user.setLastName(lastNameFormattedTextField.getText());
-    }
-
-    public String getLastName() {
-        return this.lastName;
+        String text = firstNameFormattedTextField.getText();
+        //if (!text.equals("") && !text.equals("FirstName")) {
+        user.setFirstName(text);
+        //}
     }
 
     /**
-     * TODO needs error checking
-     *
-     * @param user
+     * Set last name of user
+     * @param user is the user's name being changed
      */
-    private void setBirthday(User user) {
+    private void setLastName(User user) {
+        String text = lastNameFormattedTextField.getText();
+        //if (!text.equals("") && !text.equals("LastName")) {
+        user.setLastName(text);
+        //}
+    }
+
+
+    /**
+     * Set birthday of the user. Throws an exception if day is not valid
+     * @param user is the user's birthday being changed
+     */
+    private void setBirthday(User user) throws Exception {
         int month = monthBox.getSelectedIndex() + 1;
         int day = dayBox.getSelectedIndex() + 1;
         int year = Integer.parseInt(yearBox.getSelectedItem().toString());
+        if (year > 2019 || (year == 2019 && month > 4)) {
+            throw new Exception("Date is in the future");
+        }
+        switch (month) {
+            case 2:
+                if (day > 29) {
+                    throw new Exception("February has up to 29 days.");
+                }
+                break;
+            case 4:
+                if (day > 30) {
+                    throw new Exception("April has 30 days.");
+                }
+                break;
+            case 6:
+                if (day > 30) {
+                    throw new Exception("June has 30 days.");
+                }
+                break;
+            case 9:
+                if (day > 30) {
+                    throw new Exception("September has 30 days.");
+                }
+                break;
+            case 11:
+                if (day > 30) {
+                    throw new Exception("November has 30 days.");
+                }
+                break;
+        }
         user.setBirthday(LocalDate.of(year, month, day));
-    }
-
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
-    }
-
-    /**
-     * Method generated by IntelliJ IDEA GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
-     */
-    private void $$$setupUI$$$() {
-        content = new JPanel();
-        content.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 1, new Insets(10, 10, 20, 10), -1, -1));
-        content.setPreferredSize(new Dimension(650, 213));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        content.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        cancelButton = new JButton();
-        cancelButton.setText("Cancel");
-        panel1.add(cancelButton, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        confirmButton = new JButton();
-        confirmButton.setText("Confirm");
-        panel1.add(confirmButton, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        panel1.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
-        content.add(panel2, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label1 = new JLabel();
-        label1.setText("Date of Birth: ");
-        panel2.add(label1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        yearBox = new JComboBox();
-        yearBox.setEditable(true);
-        yearBox.setEnabled(true);
-        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("2019");
-        yearBox.setModel(defaultComboBoxModel1);
-        panel2.add(yearBox, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
-        dayBox = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-        defaultComboBoxModel2.addElement("1");
-        defaultComboBoxModel2.addElement("2");
-        defaultComboBoxModel2.addElement("3");
-        defaultComboBoxModel2.addElement("4");
-        defaultComboBoxModel2.addElement("5");
-        defaultComboBoxModel2.addElement("6");
-        defaultComboBoxModel2.addElement("7");
-        defaultComboBoxModel2.addElement("8");
-        defaultComboBoxModel2.addElement("9");
-        defaultComboBoxModel2.addElement("10");
-        defaultComboBoxModel2.addElement("11");
-        defaultComboBoxModel2.addElement("12");
-        defaultComboBoxModel2.addElement("13");
-        defaultComboBoxModel2.addElement("14");
-        defaultComboBoxModel2.addElement("15");
-        defaultComboBoxModel2.addElement("16");
-        defaultComboBoxModel2.addElement("17");
-        defaultComboBoxModel2.addElement("18");
-        defaultComboBoxModel2.addElement("19");
-        defaultComboBoxModel2.addElement("20");
-        defaultComboBoxModel2.addElement("21");
-        defaultComboBoxModel2.addElement("22");
-        defaultComboBoxModel2.addElement("23");
-        defaultComboBoxModel2.addElement("24");
-        defaultComboBoxModel2.addElement("25");
-        defaultComboBoxModel2.addElement("26");
-        defaultComboBoxModel2.addElement("27");
-        defaultComboBoxModel2.addElement("28");
-        defaultComboBoxModel2.addElement("29");
-        defaultComboBoxModel2.addElement("30");
-        defaultComboBoxModel2.addElement("31");
-        dayBox.setModel(defaultComboBoxModel2);
-        panel2.add(dayBox, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        monthBox = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel3 = new DefaultComboBoxModel();
-        defaultComboBoxModel3.addElement("January");
-        defaultComboBoxModel3.addElement("February");
-        defaultComboBoxModel3.addElement("March");
-        defaultComboBoxModel3.addElement("April");
-        defaultComboBoxModel3.addElement("May");
-        defaultComboBoxModel3.addElement("June");
-        defaultComboBoxModel3.addElement("July");
-        defaultComboBoxModel3.addElement("August");
-        defaultComboBoxModel3.addElement("September");
-        defaultComboBoxModel3.addElement("October");
-        defaultComboBoxModel3.addElement("November");
-        defaultComboBoxModel3.addElement("December");
-        monthBox.setModel(defaultComboBoxModel3);
-        panel2.add(monthBox, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        content.add(panel3, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        lastNameFormattedTextField = new JFormattedTextField();
-        lastNameFormattedTextField.setText("LastName");
-        panel3.add(lastNameFormattedTextField, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label2 = new JLabel();
-        label2.setText("Name, Last: ");
-        panel3.add(label2, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        content.add(panel4, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label3 = new JLabel();
-        label3.setText("Name, First: ");
-        panel4.add(label3, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        firstNameFormattedTextField = new JFormattedTextField();
-        firstNameFormattedTextField.setText("FirstName");
-        firstNameFormattedTextField.setToolTipText("");
-        panel4.add(firstNameFormattedTextField, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-    }
-
-    /**
-     * @noinspection ALL
-     */
-    public JComponent $$$getRootComponent$$$() {
-        return content;
     }
 }
 

@@ -1,14 +1,16 @@
 package data;
+
 import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-
 import users.Admin;
 import users.Doctor;
 import users.Patient;
 import users.User;
 
+/**
+ * This class is manages all the User accounts
+ */
 public class Account{
 
     // HashMap of all the accounts in the database. Maps a User object to a username.
@@ -54,8 +56,8 @@ public class Account{
                 case 1:
                     Admin admin = new Admin(username, password);
                     if (username.equals("admin")) {
-                        admin.setFirstName("Administration");
-                        admin.setLastName("Initialized");
+                        admin.setFirstName("Administrator");
+                        admin.setLastName("System");
                         LocalDate now = LocalDate.of(LocalDate.now().getYear(),
                                 LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth());
                         admin.setBirthday(now);
@@ -136,6 +138,15 @@ public class Account{
         return new ArrayList<>(getDictionary().keySet());
     }
 
+    public static ArrayList<User> listUserObjects() {
+        ArrayList<String> usernames = new ArrayList<>(accDictionary.keySet());
+        ArrayList<User> users = new ArrayList<>();
+        for (String username : usernames) {
+            users.add(accDictionary.get(username));
+        }
+        return users;
+    }
+
     /**
      * method to write out the dictionary to the .ser file, should be called when wanting to save changes in the dictionary.
      * @throws IOException
@@ -155,6 +166,11 @@ public class Account{
         }
     }
 
+    /**
+     * Get the names of all the users of an account type
+     * @param accType is the account type of the user
+     * @return an array of all the users of an account type
+     */
     public static ArrayList<User> getNames(int accType) {
         ArrayList<User> users = new ArrayList<>();
         switch (accType) {

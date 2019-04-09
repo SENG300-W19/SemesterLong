@@ -1,19 +1,19 @@
 package gui;
 
 import data.Account;
-import data.Appointment;
 import users.Admin;
 import users.Doctor;
 import users.User;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
- * @author dylnstwrt
+ * This class is for the menu for the administrator
  */
 public class AdminConsole {
     private JFrame frame = new JFrame("Admin Portal");
@@ -27,8 +27,8 @@ public class AdminConsole {
     private JComboBox comboBox1;
     private JTable accountsList;
     private JButton signOut;
+    private JLabel nameLabel;
     private DefaultTableModel tableModel;
-    // private DefaultTableModel requestModel;
 
     private final static String[] title = new String[]{
             "Date", "Start", "Finish", "User"
@@ -38,19 +38,21 @@ public class AdminConsole {
     };
 
     /**
-     * constructor for adminConsole
-     *
-     * @todo refractor all classes for consistency
+     * Constructor for the administrator's menu
+     * @param admin is the admin account using the menu
      */
-    public AdminConsole() {
-        //getRequests();
-        $$$setupUI$$$();
+    public AdminConsole(Admin admin) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = screenSize.height;
+        int width = screenSize.width;
+        frame.setSize(width / 2, height / 2);
+        nameLabel.setText("    " + admin.getLastName() + ", " + admin.getFirstName());
         frame.setContentPane(content);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
-
+        AdminConsole console = this;
         WindowListener exitListener = new WindowAdapter() {
 
             @Override
@@ -97,6 +99,7 @@ public class AdminConsole {
                             JOptionPane.showMessageDialog(null, "Account Created");
                         } catch (Exception e4) {
                             JOptionPane.showMessageDialog(null, "Username already exists.");
+                            e4.printStackTrace();
                         }
                         formattedTextField1.setText(null);
                         passwordField1.setText(null);
@@ -121,35 +124,33 @@ public class AdminConsole {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                HashMap<String, User> dict = Account.getDictionary();
-                for (String s : Account.listUsernames()) {
-                    User toAdd = dict.get(s);
-                    boolean dupe = false;
-                    String accountType = "";
-                    String department = "";
-                    switch (toAdd.getAccountType()) {
+                tableModel.setRowCount(0);
+                ArrayList<User> users = Account.listUserObjects();
+                users = sortUsers(users);
+                for (User user : users) {
+                    String accountType;
+                    switch (user.getAccountType()) {
                         case 1:
                             accountType = "Administrator";
-                            department = "Administration";
+                            String department = "Administration";
+                            Object[] toDisplay = {user.getFirstName(), user.getLastName(),
+                                    accountType, user.getUsername(), department, user.getBirthday()};
+                            tableModel.addRow(toDisplay);
                             break;
                         case 2:
                             accountType = "Doctor";
-                            Doctor acc = new Doctor(toAdd);
-                            department = acc.getDepartment();
+                            Object[] toDisplay2 = {user.getFirstName(), user.getLastName(),
+                                    accountType, user.getUsername(), ((Doctor) user).getDepartmentGUI(), user.getBirthday()};
+                            tableModel.addRow(toDisplay2);
                             break;
-                        default:
+                        case 3:
                             accountType = "Patient";
-                            department = "N/A";
-                    }
-                    Object[] toDisplay = {toAdd.getFirstName(), toAdd.getLastName(),
-                            accountType, toAdd.getUsername(), department, toAdd.getBirthday()};
-                    for (int i = 0; i < tableModel.getRowCount(); i++) {
-                        if (s.equals(tableModel.getValueAt(i, 3))) {
-                            dupe = true;
+                            String department3 = "N/A";
+                            Object[] toDisplay3 = {user.getFirstName(), user.getLastName(),
+                                    accountType, user.getUsername(), department3, user.getBirthday()};
+                            tableModel.addRow(toDisplay3);
                             break;
-                        }
                     }
-                    if (!dupe) tableModel.addRow(toDisplay);
                 }
             }
         });
@@ -166,78 +167,34 @@ public class AdminConsole {
                     if (!(acc0 instanceof Admin)) {
                         int option =
                                 JOptionPane.showOptionDialog(null, "Show schedule or edit?", "User Info",
-                                        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"View", "Edit", "Cancel"}, null);
-                        System.out.println(option);
+                                        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"View Schedule", "Edit", "Cancel"}, null);
                         switch (option) {
                             // view schedule
                             case 0:
-                                int row = accountsList.getSelectedRow();
-                                String username = accountsList.getValueAt(row, 3).toString();
-                                User acc = Account.getDictionary().get(username);
-                                ScheduleView view = new ScheduleView(acc);
+                                ScheduleView view = new ScheduleView(acc0);
                                 break;
                             // edit information
                             case 1:
                             /*
                             requires restart to show changes to info in the accounts page
                              */
-                                int row1 = accountsList.getSelectedRow();
-                                String username1 = accountsList.getValueAt(row1, 3).toString();
-                                User acc2 = Account.getDictionary().get(username1);
-                                Info init = new Info(Account.getDictionary().get(acc2));
-                                init.init();
+                                Info init = new Info(acc0, console);
+                                //init.init();
+                        }
+                    } else if (acc0.equals(admin)) {
+                        int option =
+                                JOptionPane.showOptionDialog(null, "Show schedule or edit?", "User Info",
+                                        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Edit", "Cancel"}, null);
+                        switch (option) {
+                            // view schedule
+                            case 0:
+                                Info init = new Info(acc0, console);
+                                break;
                         }
                     }
                 }
             }
         });
-        /*
-        acceptButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-
-                int confirm = JOptionPane.showOptionDialog(
-                        null, "Are you sure that you want to accept the request?",
-                        "Accept Request", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, null, null);
-                if (confirm == 0) {
-                    try {
-                        int requestIndex = requestTable.getSelectedRow();
-                        Appointment request = Admin.getRequests().list.get(requestIndex);
-                        request.setRequestStatus("Time Off Accepted");
-                        Admin.getRequests().removeAppointment(request);
-                        Account.writeToFile();
-                    } catch (Exception e3) {
-                        JOptionPane.showMessageDialog(null, "Could not save to file");
-                    }
-                }
-                refreshAdminConsole();
-            }
-        });
-        declineButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                int confirm = JOptionPane.showOptionDialog(
-                        null, "Are you sure that you want to decline the request?",
-                        "Decline Request", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, null, null);
-                if (confirm == 0) {
-                    try {
-                        int requestIndex = requestTable.getSelectedRow();
-                        Appointment request = Admin.getRequests().list.get(requestIndex);
-                        Doctor doctor = request.getApptDoctor();
-                        doctor.getSchedule().removeAppointment(request);
-                        Admin.getRequests().removeAppointment(request);
-                        Account.writeToFile();
-                    } catch (Exception e3) {
-                        JOptionPane.showMessageDialog(null, "Could not save to file");
-                    }
-                }
-                refreshAdminConsole();
-            }
-        });*/
         signOut.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -255,37 +212,10 @@ public class AdminConsole {
         });
     }
 
-    public void close() {
-        frame.dispose();
-    }
 
-    private void displayTable() {
-
-    }
-/*
-    private void getRequests() {
-        Admin.getRequests().sortSchedule();
-        if (Admin.getRequests().list.isEmpty()) {
-            System.out.println("it's empty");
-        }
-        for (Appointment a : Admin.getRequests().list) {
-            if (a.isRequest()) {
-                System.out.println("is request");
-                Object[] toAdd = {
-                        a.getStart().toLocalDate().toString(),
-                        a.getStart().toLocalTime().toString(),
-                        a.getFinish().toLocalTime().toString(),
-                        a.getApptDoctor().getLastName() + ", " +
-                                a.getApptDoctor().getFirstName()
-
-                };
-                requestModel.addRow(toAdd);
-            }
-        }
-    }
-*/
-
-
+    /**
+     * Used to initialize and create the columns names for the table
+     */
     private void createUIComponents() {
         // TODO: place custom component creation code here
         tableModel = new DefaultTableModel(0, 0) {
@@ -294,104 +224,63 @@ public class AdminConsole {
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-
-            ;
         };
         for (String s : columnNames) {
             tableModel.addColumn(s);
         }
         accountsList = new JTable(tableModel);
         accountsList.setDragEnabled(false);
-        /*
-        requestModel = new DefaultTableModel(0,0);
-        for (String s : title) {
-            requestModel.addColumn(s);
-        }
-        requestTable = new JTable(requestModel);
-        */
     }
 
     /**
-     * Method generated by IntelliJ IDEA GUI Designer
-     * >>> IMPORTANT!! <<<
-     * DO NOT edit this method OR call it in your code!
-     *
-     * @noinspection ALL
+     * Sorts all the users by account type
+     * @param users is the list of all users
+     * @return the sorted list of users
      */
-    private void $$$setupUI$$$() {
-        createUIComponents();
-        content = new JPanel();
-        content.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
-        tabbedPane1 = new JTabbedPane();
-        tabbedPane1.setEnabled(true);
-        content.add(tabbedPane1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(800, 400), null, 0, false));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        tabbedPane1.addTab("Administration", panel1);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(panel2, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 2, false));
-        createUser = new JPanel();
-        createUser.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
-        panel2.add(createUser, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        formattedTextField1 = new JFormattedTextField();
-        createUser.add(formattedTextField1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        passwordField1 = new JPasswordField();
-        createUser.add(passwordField1, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        passwordField2 = new JPasswordField();
-        createUser.add(passwordField2, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label1 = new JLabel();
-        label1.setText("Username: ");
-        createUser.add(label1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label2 = new JLabel();
-        label2.setText("Password: ");
-        createUser.add(label2, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label3 = new JLabel();
-        label3.setText("Confirm Password: ");
-        createUser.add(label3, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label4 = new JLabel();
-        label4.setText("Account Type: ");
-        createUser.add(label4, new com.intellij.uiDesigner.core.GridConstraints(3, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        comboBox1 = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("Administrator");
-        defaultComboBoxModel1.addElement("Doctor");
-        defaultComboBoxModel1.addElement("Patient");
-        comboBox1.setModel(defaultComboBoxModel1);
-        createUser.add(comboBox1, new com.intellij.uiDesigner.core.GridConstraints(3, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        confirmButton = new JButton();
-        confirmButton.setText("Confirm");
-        panel2.add(confirmButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label5 = new JLabel();
-        label5.setText("Create a New Account: ");
-        panel2.add(label5, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 3, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        tabbedPane1.addTab("Accounts", panel3);
-        final JScrollPane scrollPane1 = new JScrollPane();
-        panel3.add(scrollPane1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final JScrollPane scrollPane2 = new JScrollPane();
-        scrollPane1.setViewportView(scrollPane2);
-        accountsList.setAutoCreateRowSorter(true);
-        accountsList.setFillsViewportHeight(true);
-        scrollPane2.setViewportView(accountsList);
-        signOut = new JButton();
-        signOut.setText("Sign Out");
-        content.add(signOut, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        content.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+    public ArrayList<User> sortUsers(ArrayList<User> users) {
+        Collections.sort(users, new Comparator<User>() {
+            @Override
+            public int compare(User user1, User user2) {
+                return Integer.compare(user1.getAccountType(), user2.getAccountType());
+            }
+        });
+        return users;
     }
 
     /**
-     * @noinspection ALL
+     * Used to refresh the administrator menu
      */
-    public JComponent $$$getRootComponent$$$() {
-        return content;
-    }
-    /*
     public void refreshAdminConsole() {
-        requestModel.setRowCount(0);
-        getRequests();
+        tableModel.setRowCount(0);
+        //HashMap<String, User> dict = Account.getDictionary();
+        ArrayList<User> users = Account.listUserObjects();
+        users = sortUsers(users);
+        for (User user : users) {
+            String accountType;
+            switch (user.getAccountType()) {
+                case 1:
+                    accountType = "Administrator";
+                    String department = "Administration";
+                    Object[] toDisplay = {user.getFirstName(), user.getLastName(),
+                            accountType, user.getUsername(), department, user.getBirthday()};
+                    tableModel.addRow(toDisplay);
+                    break;
+                case 2:
+                    accountType = "Doctor";
+                    Object[] toDisplay2 = {user.getFirstName(), user.getLastName(),
+                            accountType, user.getUsername(), ((Doctor) user).getDepartmentGUI(), user.getBirthday()};
+                    tableModel.addRow(toDisplay2);
+                    break;
+                case 3:
+                    accountType = "Patient";
+                    String department3 = "N/A";
+                    Object[] toDisplay3 = {user.getFirstName(), user.getLastName(),
+                            accountType, user.getUsername(), department3, user.getBirthday()};
+                    tableModel.addRow(toDisplay3);
+                    break;
+            }
+        }
     }
-    */
 }
+
+

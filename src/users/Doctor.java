@@ -1,23 +1,19 @@
 package users;
+
 import java.text.Collator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Scanner;
-
-import data.Schedule;  
+import data.Schedule;
 
 /**
- * not used, refactoring is required. 
- * @author dylnstwrt
- * 
- * TODO fix variable visibility and implement missing functionality
- *  
+ * The class used for a doctor account
  */
 public class Doctor extends User {
 	
 	
 	private static final long serialVersionUID = 1L;
-	private String specialty = "General Practicioner";
+	private String specialty = "General Services";
 	private Boolean surgeon = false;
 	private LinkedList<User> patients = new LinkedList<User>();
 	private Schedule schedule = new Schedule();
@@ -152,6 +148,7 @@ public class Doctor extends User {
 		}
 		System.out.println(toDisplay);
 	}
+
 	 /**
 	  * 
 	  * @return weather or not the doctor is a surgeon.
@@ -159,19 +156,9 @@ public class Doctor extends User {
 	public boolean isSurgeon() {
 		return this.surgeon;
 	}
+
 	
 	/**
-	 * 
-	 * @return string of specialty, if not set, will return that doctor is a GP
-	 */
-	public String getSpecialty() {
-		String toReturn;
-		toReturn = this.specialty.toString();
-		return toReturn; 
-	}
-	
-	/**
-	 * 
 	 * @return linked list object copy of the list of patients.
 	 */
 	public LinkedList<User> getPatients() {
@@ -179,15 +166,31 @@ public class Doctor extends User {
 	}
 
 	/**
-	 * Set doctor department
-	 * @param department
+	 * Set doctor department (used for terminal version)
+	 * @param department is the department to be set
 	 */
 	public void setDepartment(int department) {
 		this.department = department;
 	}
 
 	/**
-	 * Get doctor department
+	 * Get the department a doctor is in (used for GUI version)
+	 * @return the doctor's specialty
+	 */
+	public String getDepartmentGUI() {
+		return specialty;
+	}
+
+	/**
+	 * Set the department a doctor is in (used for GUI version)
+	 * @param department is the department the doctor's being set to
+	 */
+	public void setDepartmentGUI(String department) {
+		this.specialty = department;
+	}
+
+	/**
+	 * Get doctor department (for terminal version)
 	 */
 	public String getDepartment() {
 		switch (department) {
@@ -212,6 +215,5 @@ public class Doctor extends User {
 		}
 		return "";
 	}
-
 }
 	

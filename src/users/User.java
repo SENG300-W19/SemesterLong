@@ -1,50 +1,81 @@
 package users;
-import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.time.LocalDate;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import data.Schedule;
 import gui.Info;
 
+/**
+ * This class is the parent User class that all other account type classes inherit
+ */
 public class User implements Serializable {
 
-    /**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private String firstName;
+
+    /**
+     * Get the first name of the user
+     * @return the first name of the user
+     */
     public String getFirstName() {
 		return firstName;
 	}
+
     private LocalDate birthday;
+
+    /**
+     * Set the birthday of the user
+     * @param date is the LocalDate object of the user's birthday
+     */
     public void setBirthday(LocalDate date) {
         this.birthday = date;
     }
 
+    /**
+     * Get the birthday of the user in string form
+     * @return
+     */
     public String getBirthday() {
         return this.birthday.toString();
     }
+
+    /**
+     * Get birthday of the user as a LocalDate object
+     * @return
+     */
+    public LocalDate getBirthdayDate() {
+        return birthday;
+    }
+
+    /**
+     * Set the first name of the user
+     * @param firstName is the name of the user that it's going to be set to
+     */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
+    /**
+     * Get the last of the user
+     * @return the last name of the user
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Set the last name of the user
+     * @param lastName is the name of the user that it's going to be set to
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public void setAccountType(int accountType) {
-        this.accountType = accountType;
-    }
 
     private String lastName;
     private String username;
     private String password;
-    //privateLinkedList<User> list = new LinkedList<User>();
     private Schedule schedule = new Schedule();
 
     /**

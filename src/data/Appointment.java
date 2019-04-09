@@ -1,17 +1,14 @@
 package data;
+
 import java.io.Serializable;
 import java.time.*;
-import java.util.LinkedList;
-
 import users.*;
 
 /**
  * class for an appointment object, which contains a start, and end time (by default is 1 hour)
  * patient and doctor aren't implemented as we want to do accountType dependent validation, and thus
  * would like to implement separate classes properly
- * 
- * @author dylnstwrt
- * 
+ *
  */
 public class Appointment implements Serializable{
 	final String FORMAT_ERROR = "Invalid Formatting";
@@ -140,29 +137,6 @@ public class Appointment implements Serializable{
     	String copy = requestStatus;
     	return copy;
 	}
-
-    public void setRequestStatus(String status) {
-    	requestStatus = status;
-	}
-	
-	/**
-	 * Check to see that the patient and doctor are assigned to each other before creating
-	 * an appointment
-	 * @param patient
-	 * @param doctor
-	 * @throws Exception
-     * @todo Implement this
-	 */
-	/**public void setParticipants(user patient, user doctor) throws Exception {
-		LinkedList<User> toCompare = this.doctor.returnPatients();
-		if (toCompare.contains(patient)) {
-			this.patient = patient;
-			this.doctor = doctor;
-		} else {
-			throw new Exception("Patient Not Assigned to Doctor");
-		}
-	}
-	*/
 
     /**
      * Get the patient associated with the appointment

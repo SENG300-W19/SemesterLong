@@ -1,18 +1,13 @@
 package data;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import exceptions.ScheduleException;
-
 /**
- * 
- * @author dylnstwrt
- *
+ * This class is the schedule for each user
  */
 public class Schedule implements Serializable {
 	public LinkedList<Appointment> list;
@@ -34,40 +29,10 @@ public class Schedule implements Serializable {
 	    this.list = toCopy.list;
     }
 
-    /**
-     * method for adding appointment to the schedule object
-     * @param toAdd schedule to add to the schedule
-     * @throws ScheduleException when the start time of the appointment is:
-     *          a) before the instance in which the method is called
-     *          b) after the two month limit from which the method is called
-     */
-    public void addAppointment(Appointment toAdd) throws ScheduleException {
-		try {
-			LocalDateTime now = LocalDateTime.now();
-			//check start date
-			if (toAdd.getStart().isBefore(now) || toAdd.getStart().isAfter(now.plusMonths(2))) {throw new Exception();}
-			// check for conflicts
-			for (Appointment app : list) {
-				if (toAdd.getStart().isAfter(app.getStart()) && toAdd.getStart().isBefore(app.getFinish())) {
-					throw new Exception("Conflicting Date");
-				}
-
-				if (app.getStart().getHour() <= toAdd.getStart().getHour() || toAdd.getStart().getHour() <= app.getFinish().getHour()){
-					throw new Exception("Sorry! Appointment time is filled up. Try another hour or minute");
-				}
-			}
-			list.add(toAdd);
-
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ScheduleException();
-		}
-	}
 
     /**
-     * Alternate method to add appointments
-     * @param toAdd
+     * Method to add appointments
+     * @param toAdd is the appointment being added
      * @throws Exception if the date is out of range or clashes with a different appointment
      */
 	public void addAppt(Appointment toAdd) throws Exception {
@@ -92,17 +57,8 @@ public class Schedule implements Serializable {
     }
 
     /**
-     * Method to add a request
-     * @param appointment gets added to Admin.requests Schedule
-     */
-	public void addRequests(Appointment appointment) {
-	    System.out.println("Adding request");
-        list.add(appointment);
-        sortSchedule();
-    }
-
-    /**
-     * @todo
+     * Remove an appointment from a user's appointment list
+     * @param appointment is the appointment being removed
      */
 	public void removeAppointment(Appointment appointment) {
 		for (int i = 0; i < list.size(); i++) {
@@ -134,8 +90,8 @@ public class Schedule implements Serializable {
 
     /**
      * Checks to see if an appointment is valid
-     * @param toAdd
-     * @param accType
+     * @param toAdd is the appointment to add
+     * @param accType is the account type of the user
      * @throws Exception
      */
 	public void isValid(Appointment toAdd, int accType) throws Exception {
@@ -143,7 +99,6 @@ public class Schedule implements Serializable {
 		if (toAdd.getStart().isBefore(now) || toAdd.getStart().isAfter(now.plusMonths(2))) {
 			throw new Exception("Date must be within two months of today");
 		}
-		//System.out.println(list.get(0).getStart().toString());
 		if (!list.isEmpty()) {
             if (accType == 3) {
                 if (toAdd.getStart().isBefore(now) || toAdd.getStart().isAfter(now.plusMonths(2))) {

@@ -40,28 +40,6 @@ public class Patient extends User {
         System.exit(0);
     }
 
-    /**
-     * Method to edit the patients info on account creation
-     * TODO add confirmation in later iterations
-     */
-    public void editInfo() {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.print("Input first name: ");
-        String first = scan.next();
-        this.setFirstName(first);
-
-        System.out.print("Input last name: ");
-        String last = scan.next();
-        this.setLastName(last);
-
-        System.out.println("Patient name: " + this.getFirstName() + " " + this.getLastName());
-
-    }
-
-    public void getInfo() {
-        System.out.println("Patient's name: " + this.getFirstName() + " " + this.getLastName());
-    }
 
     /**
      * Constructor to create a patient account which calls parent class (User) constructor
@@ -73,16 +51,25 @@ public class Patient extends User {
         super(username, password, 3);
     }
 
+    /**
+     * Constructor to create a patient account
+     * @param user to copy
+     */
     public Patient(User user) {super(user.getUsername(), user.getPassword(), 3);}
 
+    /**
+     * Get the list of the patient's doctors
+     * @return the list of doctor's
+     */
     public LinkedList<User> getDoctors() {
         return doctors;
     }
 
-    public void setDoctors(LinkedList<User> doctors) {
-        this.doctors = doctors;
-    }
 
+    /**
+     * Add doctor to patient list (for terminal version)
+     * @param toAdd is the doctor to add to list
+     */
     public void addDoctor(Doctor toAdd) {
         if (doctors.isEmpty()) doctors.add(toAdd);
         else {
@@ -107,6 +94,9 @@ public class Patient extends User {
         }
     }
 
+    /**
+     * Remove a doctor from a patient's list (for terminal version)
+     */
     public void removeDoctor() {
         // list all patients
         // remove patient at certain index (1 . . . . N), use 0 to cancel
