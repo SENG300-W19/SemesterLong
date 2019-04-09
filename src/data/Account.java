@@ -3,6 +3,8 @@ package data;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
+
+import gui.AdminConsole;
 import users.Admin;
 import users.Doctor;
 import users.Patient;
@@ -42,7 +44,6 @@ public class Account{
     }
 
     /**
-     * TODO - Fix to create separate Doctor, Patient, and Admin Accounts Based Upon the int input
      * Method to create a new account. Saves to accounts.ser file after creation.
      * @param username
      * @param password
@@ -88,6 +89,56 @@ public class Account{
             throw new Exception("Username already exists");
         }
     }
+
+    /**
+     * Method to create a new account for GUI. Saves to accounts.ser file after creation.
+     * @param username
+     * @param password
+     * @param accountType 1 - admin, 2 - doctor, 3 patient.
+     * @param console is the administrator console to refresh
+     */
+    /*
+    public static void createAccountGUI(String username, String password, int accountType, AdminConsole console) throws Exception {
+        username = username.toLowerCase();
+        boolean exists = accDictionary.containsKey(username);
+        if (!exists) {
+            switch (accountType) {
+                case 1:
+                    Admin admin = new Admin(username, password);
+                    if (username.equals("admin")) {
+                        admin.setFirstName("Administrator");
+                        admin.setLastName("System");
+                        LocalDate now = LocalDate.of(LocalDate.now().getYear(),
+                                LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth());
+                        admin.setBirthday(now);
+                    } else {
+                        admin.setInfo(admin);
+                    }
+                    accDictionary.put(username, admin);
+                    break;
+                case 2:
+                    Doctor doctor = new Doctor(username, password);
+                    doctor.setInfo(doctor);
+                    accDictionary.put(username, doctor);
+                    break;
+                case 3:
+                    Patient acc = new Patient(username, password);
+                    acc.setInfo(acc);
+                    accDictionary.put(username, acc);
+                    break;
+            }
+            try {
+                writeToFile();
+                System.out.println("\nAccount " + username + " is created and saved.\n");
+            } catch (IOException i) {
+                System.out.println("Could not successfully create/save accounts.ser.");
+                i.printStackTrace();
+            }
+        } else {
+            throw new Exception("Username already exists");
+        }
+    }
+    */
 
     /**
      * Method that attempts to log in with user given username and password

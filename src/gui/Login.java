@@ -36,6 +36,7 @@ public class Login {
          * If accounts.ser already exists, will try to login with the selected credentials.
          * Then opens the corresponding GUI class for their terminal.
          */
+        init();
         WindowListener exitListener = new WindowAdapter() {
 
             @Override
@@ -133,15 +134,5 @@ public class Login {
         frame.setVisible(true);
     }
 
-    /**
-     * Open the login menu
-     * @param args
-     */
-    /*
-    public static void main(String[] args) {
-        Login log = new Login();
-        log.init();
-    }
-*/
 }
 

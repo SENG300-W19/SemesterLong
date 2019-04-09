@@ -110,6 +110,7 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.accountType = accountType;
+        birthday = LocalDate.of(Integer.parseInt("2019"), Integer.parseInt("1"), Integer.parseInt("1"));
     }
 
     /**

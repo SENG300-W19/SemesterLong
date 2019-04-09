@@ -16,7 +16,6 @@ public class main implements Serializable {
     @SuppressWarnings("unchecked")
 	public static void main(String[] args) {
         Login log = new Login();
-        log.init();
 
         // On program startup, the program tries to load the accounts.ser file, if it doesn't exist then it will create
         // a new admin account with username: admin, password: 123.

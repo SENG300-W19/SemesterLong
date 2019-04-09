@@ -60,10 +60,14 @@ public class DateSelect {
 
                     int time = timeSlots.getSelectedIndex() + 8;
                     int nameIndex = nameBox.getSelectedIndex();
-                    User otherUser = names.get(nameIndex);
+
                     Schedule other;
                     try {
                         if (user instanceof Patient) {
+                            if (names.isEmpty()) {
+                                throw new Exception("Please set up an appointment from the doctor's side first.");
+                            }
+                            User otherUser = names.get(nameIndex);
                             Doctor doctor = (Doctor) otherUser;
                             other = doctor.getSchedule();
                             schedule.isValid(new Appointment(day, month, year, time, 0), 3);
@@ -74,8 +78,11 @@ public class DateSelect {
                             addDoctor((Patient) user, doctor);
                             addPatient(doctor, (Patient) user);
                             view.refreshScheduleView();
-
                         } else if (user instanceof Doctor) {
+                            if (names.isEmpty()) {
+                                throw new Exception("Please add a patient to create an appointment.");
+                            }
+                            User otherUser = names.get(nameIndex);
                             Patient patient = (Patient) otherUser;
                             other = patient.getSchedule();
                             schedule.isValid(new Appointment(day, month, year, time, 0), 2);

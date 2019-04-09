@@ -56,13 +56,21 @@ public class Info {
         }
         birthday = user.getBirthdayDate();
         if (birthday != null) {
-            firstNameFormattedTextField.setText(user.getFirstName());
-            lastNameFormattedTextField.setText(user.getLastName());
             int day = birthday.getDayOfMonth();
             dayBox.setSelectedIndex(day - 1);
             int month = birthday.getMonthValue();
             monthBox.setSelectedItem(months[month - 1]);
             yearBox.setSelectedItem(birthday.getYear());
+        }
+        if (user.getFirstName() == null) {
+            firstNameFormattedTextField.setText("FirstName");
+        } else {
+            firstNameFormattedTextField.setText(user.getFirstName());
+        }
+        if (user.getLastName() == null) {
+            firstNameFormattedTextField.setText("LastName");
+        } else {
+            lastNameFormattedTextField.setText(user.getLastName());
         }
         init();
         WindowListener exitListener = new WindowAdapter() {
@@ -156,13 +164,21 @@ public class Info {
         }
         birthday = user.getBirthdayDate();
         if (birthday != null) {
-            firstNameFormattedTextField.setText(user.getFirstName());
-            lastNameFormattedTextField.setText(user.getLastName());
             int day = birthday.getDayOfMonth();
             dayBox.setSelectedIndex(day - 1);
             int month = birthday.getMonthValue();
             monthBox.setSelectedItem(months[month - 1]);
             yearBox.setSelectedItem(birthday.getYear());
+        }
+        if (user.getFirstName().equals("")) {
+            firstNameFormattedTextField.setText("FirstName");
+        } else {
+            firstNameFormattedTextField.setText(user.getFirstName());
+        }
+        if (user.getLastName().equals("")) {
+            firstNameFormattedTextField.setText("LastName");
+        } else {
+            lastNameFormattedTextField.setText(user.getLastName());
         }
         init();
         WindowListener exitListener = new WindowAdapter() {
@@ -219,9 +235,11 @@ public class Info {
                         break;
                     case 1: //NO
                         JOptionPane.showMessageDialog(null, "No changes saved");
+                        console.refreshAdminConsole();
                         frame.dispose();
                         break;
                     case 2: //CANCEL
+                        console.refreshAdminConsole();
                         break;
                 }
             }
@@ -253,13 +271,21 @@ public class Info {
         departmentBox.setVisible(false);
         birthday = user.getBirthdayDate();
         if (birthday != null) {
-            firstNameFormattedTextField.setText(user.getFirstName());
-            lastNameFormattedTextField.setText(user.getLastName());
             int day = birthday.getDayOfMonth();
             dayBox.setSelectedIndex(day - 1);
             int month = birthday.getMonthValue();
             monthBox.setSelectedItem(months[month - 1]);
             yearBox.setSelectedItem(birthday.getYear());
+        }
+        if (user.getFirstName().equals("")) {
+            firstNameFormattedTextField.setText("FirstName");
+        } else {
+            firstNameFormattedTextField.setText(user.getFirstName());
+        }
+        if (user.getLastName().equals("")) {
+            firstNameFormattedTextField.setText("LastName");
+        } else {
+            lastNameFormattedTextField.setText(user.getLastName());
         }
         init();
         WindowListener exitListener = new WindowAdapter() {
@@ -311,9 +337,11 @@ public class Info {
                         break;
                     case 1: //NO
                         JOptionPane.showMessageDialog(null, "No changes saved");
+                        console.refreshDoctorConsole();
                         frame.dispose();
                         break;
                     case 2: //CANCEL
+                        console.refreshDoctorConsole();
                         break;
                 }
             }
